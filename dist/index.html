@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="style.css">
         <title>Todo List</title>
     </head>
     <body>
@@ -21,7 +22,15 @@
                 </li>
             </ul>
         </form>
-        <div id="display"></div>
+        <div class="sidenav">
+            <li>
+                <a href="#">Default Project</a>
+            </li>
+            <button id='add_project'>Add Project</button>
+        </div>
+        <div id="display">
+            <table style="width: 50%" id='table'></table>
+        </div>
         <script src="main.js"></script>
     </body>
 </html>

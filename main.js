@@ -1,1 +1,1 @@
-console.log("workijng");
+(()=>{"use strict";let e=[],t=document.querySelector("#table"),n=0;document.querySelector(".submit").addEventListener("click",(()=>{let l=`${form[0].value}`,d=`${form[0].value}`;e[n]=((e,t)=>({title:e,details:t}))(l,d),function(n){let l=document.createElement("tr"),d=document.createElement("td");d.textContent=e[n].title;let c=document.createElement("td");c.textContent=e[n].details;let a=document.createElement("span");a.textContent="x",l.appendChild(d),l.appendChild(c),l.appendChild(a),t.appendChild(l)}(n),n++}))})();

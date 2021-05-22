@@ -7,29 +7,32 @@
         <title>Todo List</title>
     </head>
     <body>
-        <form id='form'>
-            <ul>
-                <li>
-                    <lebel for='title'>Title</lebel>
-                    <input type="text" id="title" name="Title">
-                </li>
-                <li>
-                    <label for="details">Details</label>
-                    <textarea id="details" name="Details"></textarea>
-                </li>
-                <li class='submit'>
-                    <button type="button">Submit</button>
-                </li>
-            </ul>
-        </form>
         <div class="sidenav">
-            <li>
-                <a href="#">Default Project</a>
+             <li id='projects'>
+                <a href="#" id='default_project'>Default Project</a>
             </li>
             <button id='add_project'>Add Project</button>
         </div>
-        <div id="display">
-            <table style="width: 50%" id='table'></table>
+        <button id='add_task'>Add Task</button>
+        <div id='center'>
+            <form id='form'>
+                <ul>
+                    <li>
+                        <lebel for='title'>Title</lebel>
+                        <input type="text" id="title" name="Title">
+                    </li>
+                    <li>
+                        <label for="details">Details</label>
+                        <textarea id="details" name="Details"></textarea>
+                    </li>
+                    <li>
+                        <button id='submit' type="button">Submit</button>
+                    </li>
+                </ul>
+            </form>
+            <div id="display">
+                <table style="width: 50%" id='table'></table>
+            </div>
         </div>
         <script src="main.js"></script>
     </body>

@@ -10,6 +10,15 @@
     padding-top: 20px;
   }
   
+  .sidenav span{
+    color: white;
+  }
+
+  .side_nav_project_name_holder{
+    display: flex;
+    align-items: center;
+  }
+
   .sidenav a {
     padding: 6px 8px 6px 16px;
     text-decoration: none;

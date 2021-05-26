@@ -1,5 +1,5 @@
-let createTask=(title,details)=>{
-    return {title,details}
+let createTask=(title,details,dueDate)=>{
+    return {title,details,dueDate}
 }
 export {
     createTask

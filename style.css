@@ -36,12 +36,27 @@
     padding: 0px 10px;
   }
 
-  #center {
+  #form {
     display: flex;
     justify-content: center;
-    height: 100%;
   }
   
+  #display {
+    display: flex;
+    justify-content: center;
+  }
+
+  table,tr {
+    border: 1px solid black;
+  }
+  td {
+    width: 100px;
+    padding: 5px;
+  }
+  td button{
+    margin-left: 100px;
+  }
+
   @media screen and (max-height: 450px) {
     .sidenav {padding-top: 15px;}
     .sidenav a {font-size: 18px;}

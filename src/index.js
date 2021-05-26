@@ -9,12 +9,28 @@ defaultProject.addEventListener('click',(e)=>{
 let table=document.querySelector('#table');
 function display(task,index){
     let tableRow=document.createElement('tr');
+    let checkbox=document.createElement('td');
+    let checkboxInput=document.createElement('input');
+    checkboxInput.setAttribute('type','checkbox');
+    checkboxInput.setAttribute('id','done');
+    checkboxInput.setAttribute('name','done');
+    checkboxInput.setAttribute('value','done');
+    checkbox.appendChild(checkboxInput);
+    tableRow.appendChild(checkbox);
     let titleInfo=document.createElement('td');
     titleInfo.textContent=task[index].title;
-    let detailsInfo=document.createElement('td');
-    detailsInfo.textContent=task[index].details;
     tableRow.appendChild(titleInfo);
+    let detailsInfo=document.createElement('td');
+    let detailsButton=document.createElement('button');
+    detailsButton.addEventListener('click',()=>{
+        alert(task[index].details);
+    })
+    detailsButton.textContent='Details';
+    detailsInfo.appendChild(detailsButton);
     tableRow.appendChild(detailsInfo);
+    let dueDate=document.createElement('td');
+    dueDate.textContent=task[index].dueDate;
+    tableRow.appendChild(dueDate);
     table.appendChild(tableRow);
 }
 let submitButton=document.querySelector('#submit');
@@ -22,8 +38,9 @@ submitButton.setAttribute('data-index',`${0}`);
 submitButton.addEventListener('click',(e)=>{
     let title=`${form[0].value}`;
     let details=`${form[1].value}`;
+    let dueDate=`${form[2].value}`;
     task=projects[e.target.dataset.index];
-    task.push(createTask(title,details));
+    task.push(createTask(title,details,dueDate));
     display(task,task.length-1);
 })
 

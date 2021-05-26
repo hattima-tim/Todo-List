@@ -1,13 +1,13 @@
-import {createTask} from './applicationLogic';
-let projects=[[]];
+import {createTask,sortedTasks} from './applicationLogic';
 let task;
+let projects=[[]];
 let defaultProject=document.querySelector('#default_project');
 defaultProject.setAttribute('data-index',`${0}`);
 defaultProject.addEventListener('click',(e)=>{
     switchProject(e.target.dataset.index);
 })
 let table=document.querySelector('#table');
-function display(task,index){
+let display=(task,index)=>{
     let tableRow=document.createElement('tr');
     let checkbox=document.createElement('td');
     let checkboxInput=document.createElement('input');
@@ -36,12 +36,20 @@ function display(task,index){
 let submitButton=document.querySelector('#submit');
 submitButton.setAttribute('data-index',`${0}`);
 submitButton.addEventListener('click',(e)=>{
+    let importanceDropdown=document.querySelector('#importance');
     let title=`${form[0].value}`;
     let details=`${form[1].value}`;
-    let dueDate=`${form[2].value}`;
+    let importance=`${importanceDropdown.value}`;
+    let dueDate=`${form[3].value}`;
     task=projects[e.target.dataset.index];
-    task.push(createTask(title,details,dueDate));
-    display(task,task.length-1);
+    task.push(createTask(importance,title,details,dueDate));
+    let sort= sortedTasks(task);
+    while (table.firstChild) {
+        table.firstChild.remove();
+    }
+    for (let i=0;i<sort.length;i++){
+        display(sort,i);
+    }
 })
 
 let updateIndexOfProjects=(index)=>{

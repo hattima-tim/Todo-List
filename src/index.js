@@ -1,4 +1,4 @@
-import {createTask,sortedTasks} from './applicationLogic';
+import {createTask,sortedTasks,create_human_readable_importance_vaule} from './applicationLogic';
 let task;
 let projects=[[]];
 let defaultProject=document.querySelector('#default_project');
@@ -22,8 +22,12 @@ let display=(task,index)=>{
     tableRow.appendChild(titleInfo);
     let detailsInfo=document.createElement('td');
     let detailsButton=document.createElement('button');
-    detailsButton.addEventListener('click',()=>{
-        alert(task[index].details);
+    detailsButton.setAttribute('data-index',`${index}`);
+    detailsButton.addEventListener('click',(e)=>{
+        console.log(task[e.target.dataset.index]);
+        let coolImportanceValue=create_human_readable_importance_vaule(task[e.target.dataset.index].importance);
+        alert(`Description:${task[e.target.dataset.index].description}
+        Importance:${coolImportanceValue}`);
     })
     detailsButton.textContent='Details';
     detailsInfo.appendChild(detailsButton);
@@ -38,11 +42,11 @@ submitButton.setAttribute('data-index',`${0}`);
 submitButton.addEventListener('click',(e)=>{
     let importanceDropdown=document.querySelector('#importance');
     let title=`${form[0].value}`;
-    let details=`${form[1].value}`;
+    let description=`${form[1].value}`;
     let importance=`${importanceDropdown.value}`;
     let dueDate=`${form[3].value}`;
     task=projects[e.target.dataset.index];
-    task.push(createTask(importance,title,details,dueDate));
+    task.push(createTask(importance,title,description,dueDate));
     let sort= sortedTasks(task);
     while (table.firstChild) {
         table.firstChild.remove();

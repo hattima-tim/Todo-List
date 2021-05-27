@@ -6,15 +6,34 @@ defaultProject.setAttribute('data-index',`${0}`);
 defaultProject.addEventListener('click',(e)=>{
     switchProject(e.target.dataset.index);
 })
+let updateIndexOfTasks=(index)=>{
+    let taskList=document.querySelectorAll('.task_list');
+    for (let i=index;i<taskList.length-1;i++){
+        let indexOfNextTask=Number(i)+1;
+        let indexOfCheckbox=0;
+        let indexOfDetailsButton=2;
+        taskList[indexOfNextTask].childNodes[indexOfCheckbox].firstChild.setAttribute('data-index',`${i}`);
+        taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild.setAttribute('data-index',`${i}`);
+    }
+}
 let table=document.querySelector('#table');
 let display=(task,index)=>{
     let tableRow=document.createElement('tr');
+    tableRow.classList.add('task_list');
     let checkbox=document.createElement('td');
     let checkboxInput=document.createElement('input');
     checkboxInput.setAttribute('type','checkbox');
     checkboxInput.setAttribute('id','done');
     checkboxInput.setAttribute('name','done');
     checkboxInput.setAttribute('value','done');
+    checkboxInput.setAttribute('data-index',`${index}`);
+    checkboxInput.addEventListener('change',(e)=>{
+        let indexOfCurrentTask=e.target.dataset.index;
+        console.log(indexOfCurrentTask)
+        task.splice(indexOfCurrentTask,1);
+        updateIndexOfTasks(indexOfCurrentTask);
+        e.target.parentNode.parentNode.remove();
+    })
     checkbox.appendChild(checkboxInput);
     tableRow.appendChild(checkbox);
     let titleInfo=document.createElement('td');
@@ -24,7 +43,6 @@ let display=(task,index)=>{
     let detailsButton=document.createElement('button');
     detailsButton.setAttribute('data-index',`${index}`);
     detailsButton.addEventListener('click',(e)=>{
-        console.log(task[e.target.dataset.index]);
         let coolImportanceValue=create_human_readable_importance_vaule(task[e.target.dataset.index].importance);
         alert(`Description:${task[e.target.dataset.index].description}
         Importance:${coolImportanceValue}`);

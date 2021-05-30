@@ -1,10 +1,24 @@
 import {createTask,sortedTasks,create_human_readable_importance_vaule} from './applicationLogic';
 let task;
 let projects=[[]];
+
 let defaultProject=document.querySelector('#default_project');
 defaultProject.setAttribute('data-index',`${0}`);
 defaultProject.addEventListener('click',(e)=>{
     switchProject(e.target.dataset.index);
+})
+
+let formCloseButton=document.querySelector('#close');
+formCloseButton.addEventListener('click',()=>{
+    formContainer.style.display='none';
+})
+
+let formContainer=document.querySelector('#container');
+let addTaskButton=document.querySelector('#add_task');
+addTaskButton.addEventListener('click',()=>{
+    formContainer.style.display='flex';
+    formContainer.style.justifyContent='center';
+    formContainer.style.alignItems='center';
 })
 let updateIndexOfTasks=(index)=>{
     let taskList=document.querySelectorAll('.task_list');
@@ -19,9 +33,15 @@ let updateIndexOfTasks=(index)=>{
 let table=document.querySelector('#table');
 let display=(task,index)=>{
     let tableRow=document.createElement('tr');
-    tableRow.classList.add('task_list');
     let checkbox=document.createElement('td');
     let checkboxInput=document.createElement('input');
+    let titleInfo=document.createElement('td');
+    let detailsInfo=document.createElement('td');
+    let detailsButton=document.createElement('button');
+    let dueDate=document.createElement('td');
+  
+    tableRow.classList.add('task_list');
+  
     checkboxInput.setAttribute('type','checkbox');
     checkboxInput.setAttribute('id','done');
     checkboxInput.setAttribute('name','done');
@@ -29,35 +49,35 @@ let display=(task,index)=>{
     checkboxInput.setAttribute('data-index',`${index}`);
     checkboxInput.addEventListener('change',(e)=>{
         let indexOfCurrentTask=e.target.dataset.index;
-        console.log(indexOfCurrentTask)
         task.splice(indexOfCurrentTask,1);
         updateIndexOfTasks(indexOfCurrentTask);
         e.target.parentNode.parentNode.remove();
     })
-    checkbox.appendChild(checkboxInput);
-    tableRow.appendChild(checkbox);
-    let titleInfo=document.createElement('td');
+
     titleInfo.textContent=task[index].title;
-    tableRow.appendChild(titleInfo);
-    let detailsInfo=document.createElement('td');
-    let detailsButton=document.createElement('button');
+
+    detailsButton.textContent='Details';
     detailsButton.setAttribute('data-index',`${index}`);
     detailsButton.addEventListener('click',(e)=>{
         let coolImportanceValue=create_human_readable_importance_vaule(task[e.target.dataset.index].importance);
         alert(`Description:${task[e.target.dataset.index].description}
         Importance:${coolImportanceValue}`);
     })
-    detailsButton.textContent='Details';
+
+    dueDate.textContent=task[index].dueDate;
+  
+    checkbox.appendChild(checkboxInput);
+    tableRow.appendChild(checkbox);
+    tableRow.appendChild(titleInfo);
     detailsInfo.appendChild(detailsButton);
     tableRow.appendChild(detailsInfo);
-    let dueDate=document.createElement('td');
-    dueDate.textContent=task[index].dueDate;
     tableRow.appendChild(dueDate);
     table.appendChild(tableRow);
 }
 let submitButton=document.querySelector('#submit');
 submitButton.setAttribute('data-index',`${0}`);
 submitButton.addEventListener('click',(e)=>{
+    formContainer.style.display='none';
     let importanceDropdown=document.querySelector('#importance');
     let title=`${form[0].value}`;
     let description=`${form[1].value}`;

@@ -1,3 +1,14 @@
+#header_container{
+  display: flex;
+  justify-content: center;
+}
+#header{
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+  border-bottom:2px solid #04AA6D;
+}
+
 #add_task{
   position: absolute;
   font-size: 2em;

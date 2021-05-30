@@ -1,11 +1,15 @@
 import {createTask,sortedTasks,create_human_readable_importance_vaule} from './applicationLogic';
 let task;
+let taskCompletionCounter=0;
+let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
 let projects=[[]];
+let projectHeader=document.querySelector('#project_header');
 
-let defaultProject=document.querySelector('#default_project');
-defaultProject.setAttribute('data-index',`${0}`);
-defaultProject.addEventListener('click',(e)=>{
+let home=document.querySelector('#home');
+home.setAttribute('data-index',`${0}`);
+home.addEventListener('click',(e)=>{
     switchProject(e.target.dataset.index);
+    projectHeader.textContent='Home';
 })
 
 let formCloseButton=document.querySelector('#close');
@@ -48,6 +52,8 @@ let display=(task,index)=>{
     checkboxInput.setAttribute('value','done');
     checkboxInput.setAttribute('data-index',`${index}`);
     checkboxInput.addEventListener('change',(e)=>{
+        taskCompletionCounter+=1;
+        taskCompletionCounterDOM.textContent=`Completed (${taskCompletionCounter})`;
         let indexOfCurrentTask=e.target.dataset.index;
         task.splice(indexOfCurrentTask,1);
         updateIndexOfTasks(indexOfCurrentTask);
@@ -102,7 +108,7 @@ let updateIndexOfProjects=(index)=>{
     }
 }
 
-let switchProject=(index)=>{
+let switchProject=(index,projectName)=>{
     while (table.firstChild) {
         table.firstChild.remove();
     }
@@ -111,6 +117,7 @@ let switchProject=(index)=>{
         display(task,i);
     }
     submitButton.setAttribute('data-index',`${index}`);
+    projectHeader.textContent=`${projectName}`
 }
 
 let sidenav=document.querySelector('.sidenav');
@@ -124,7 +131,7 @@ createNewProject.addEventListener('click',()=>{
     aElement.setAttribute('data-index',`${projects.length-1}`);
     aElement.addEventListener('click',(e)=>{
         let indexOfClickedProject=e.target.dataset.index;
-        switchProject(indexOfClickedProject);
+        switchProject(indexOfClickedProject,projectName);
     });
     let side_nav_project_name_container=document.createElement('div');
     side_nav_project_name_container.classList.add('side_nav_project_name_holder');
@@ -135,11 +142,11 @@ createNewProject.addEventListener('click',()=>{
         let indexOfCurrentProject=e.target.previousElementSibling.dataset.index;
         projects.splice(indexOfCurrentProject,1);
         updateIndexOfProjects(indexOfCurrentProject);
-        switchProject(0);
+        switchProject(0,'Home');
         e.target.parentNode.remove();
     })
     side_nav_project_name_container.appendChild(aElement);
     side_nav_project_name_container.appendChild(close);
     sidenav.appendChild(side_nav_project_name_container);
-    switchProject(projects.length-1);
+    switchProject(projects.length-1,projectName);
 })

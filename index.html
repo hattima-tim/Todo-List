@@ -11,17 +11,17 @@
             <a href="#" class="project_name" id='default_project'>Default Project</a>
             <button id='add_project'>Add Project</button>
         </div>
-        <button id='add_task'>Add Task</button>
-        <div id='center'>
+        <div id='container'>
             <form id='form'>
+                <span id="close">&times;</span>
                 <ul>
                     <li>
                         <lebel for='title'>Title</lebel>
                         <input type="text" id="title" name="Title">
                     </li>
                     <li>
-                        <label for="details">Details</label>
-                        <textarea id="details" name="Details"></textarea>
+                        <label for="description">Description</label>
+                        <textarea id="description" name="Description"></textarea>
                     </li>
                     <li>
                         <label for="importance">Choose importance</label>
@@ -38,13 +38,16 @@
                     <li>
                         <button id='submit' type="button">Submit</button>
                     </li>
-                </ul>
+                </ul> 
             </form>
-            <div id="display">
-                <table id='table'>
-                </table>
-            </div>
+        </div>    
+        
+        <div id="display">
+            <table id='table'>
+            </table>
         </div>
+            
+        <button id='add_task'>+</button>
         <script src="main.js"></script>
     </body>
 </html>

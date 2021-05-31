@@ -34,8 +34,9 @@ let updateIndexOfTasks=(index)=>{
         taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild.setAttribute('data-index',`${i}`);
     }
 }
-let table=document.querySelector('#table');
+let taskDisplayDomContainer=document.querySelector('#display');
 let display=(task,index)=>{
+    let table=document.createElement('table');
     let tableRow=document.createElement('tr');
     let checkbox=document.createElement('td');
     let checkboxInput=document.createElement('input');
@@ -43,9 +44,8 @@ let display=(task,index)=>{
     let detailsInfo=document.createElement('td');
     let detailsButton=document.createElement('button');
     let dueDate=document.createElement('td');
-  
+    
     tableRow.classList.add('task_list');
-  
     checkboxInput.setAttribute('type','checkbox');
     checkboxInput.setAttribute('id','done');
     checkboxInput.setAttribute('name','done');
@@ -57,11 +57,9 @@ let display=(task,index)=>{
         let indexOfCurrentTask=e.target.dataset.index;
         task.splice(indexOfCurrentTask,1);
         updateIndexOfTasks(indexOfCurrentTask);
-        e.target.parentNode.parentNode.remove();
+        e.target.parentNode.parentNode.parentNode.remove();
     })
-
     titleInfo.textContent=task[index].title;
-
     detailsButton.textContent='Details';
     detailsButton.setAttribute('data-index',`${index}`);
     detailsButton.addEventListener('click',(e)=>{
@@ -69,9 +67,7 @@ let display=(task,index)=>{
         alert(`Description:${task[e.target.dataset.index].description}
         Importance:${coolImportanceValue}`);
     })
-
     dueDate.textContent=task[index].dueDate;
-  
     checkbox.appendChild(checkboxInput);
     tableRow.appendChild(checkbox);
     tableRow.appendChild(titleInfo);
@@ -79,6 +75,7 @@ let display=(task,index)=>{
     tableRow.appendChild(detailsInfo);
     tableRow.appendChild(dueDate);
     table.appendChild(tableRow);
+    taskDisplayDomContainer.appendChild(table);
 }
 let submitButton=document.querySelector('#submit');
 submitButton.setAttribute('data-index',`${0}`);
@@ -92,8 +89,8 @@ submitButton.addEventListener('click',(e)=>{
     task=projects[e.target.dataset.index];
     task.push(createTask(importance,title,description,dueDate));
     let sort= sortedTasks(task);
-    while (table.firstChild) {
-        table.firstChild.remove();
+    while (taskDisplayDomContainer.firstChild) {
+        taskDisplayDomContainer.firstChild.remove();
     }
     for (let i=0;i<sort.length;i++){
         display(sort,i);
@@ -121,8 +118,8 @@ let switchProject=(index,projectName)=>{
 }
 
 let sidenav=document.querySelector('.sidenav');
-let createNewProject=document.querySelector('#add_project');
-createNewProject.addEventListener('click',()=>{
+let createNewProjectButton=document.querySelector('#add_project');
+createNewProjectButton.addEventListener('click',()=>{
     projects.push([]);
     let projectName=prompt('Enter a name');
     let aElement=document.createElement('a');
@@ -147,6 +144,6 @@ createNewProject.addEventListener('click',()=>{
     })
     side_nav_project_name_container.appendChild(aElement);
     side_nav_project_name_container.appendChild(close);
-    sidenav.appendChild(side_nav_project_name_container);
+    sidenav.insertBefore(side_nav_project_name_container,createNewProjectButton);
     switchProject(projects.length-1,projectName);
 })

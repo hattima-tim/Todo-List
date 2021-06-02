@@ -11,9 +11,19 @@ home.addEventListener('click',(e)=>{
     projectHeader.textContent='Home';
 })
 
-let formCloseButton=document.querySelector('#close');
+let formCloseButton=document.querySelector('#closeForm');
 formCloseButton.addEventListener('click',()=>{
     formContainer.style.display='none';
+})
+
+let detailsModal=document.querySelector('#details_modal');
+let detailsModalContent=document.querySelector('#datails_modal_content');
+let detailsModalCloseButton=document.querySelector('#close_details_info');
+detailsModalCloseButton.addEventListener('click',()=>{
+    for (let i=0;i<3;i++) {
+        detailsModalContent.lastChild.remove();
+    }
+    detailsModal.style.display='none';
 })
 
 let formContainer=document.querySelector('#container');
@@ -45,10 +55,10 @@ submitButton.addEventListener('click',(e)=>{
 })
 
 let switchProject=(index,projectName)=>{
+    task=projects[index];
     while (taskDisplayDomContainer.firstChild) {
         taskDisplayDomContainer.firstChild.remove();
     }
-    task=projects[index];
     for(let i=0;i<task.length;i++){
         createDomStructurForTask(task,i);
     }

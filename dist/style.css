@@ -18,6 +18,38 @@
   height: 50px;
   border-radius: 50%;
 }
+#details_modal{
+  display: none;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+#datails_modal_content{
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 370px; /* Could be more or less, depending on screen size */
+}
+#close_details_info {
+  color: #aaa;
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#close_details_info:hover,
+#close_details_info:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
 #container {
   display: none;
   position: fixed; /* Stay in place */
@@ -63,15 +95,15 @@ input[type=text], select, textarea {
 #submit:hover {
   background-color: #45a049;
 }
-#close {
+#closeForm {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-#close:hover,
-#close:focus {
+#closeForm:hover,
+#closeForm:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
@@ -90,13 +122,15 @@ input[type=text], select, textarea {
   }
   
   .sidenav span{
-    color: white;
+    color: #818181;
+    font-size: 1.1em;
   }
 
   .side_nav_project_name_holder{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    cursor: pointer;
   }
 
   .sidenav a {
@@ -109,6 +143,10 @@ input[type=text], select, textarea {
   
   .sidenav a:hover {
     color: #f1f1f1;
+  }
+  .sidenav span:hover{
+    color:#f1f1f1;
+    font-size: 1.1em;
   }
   .sidenav button{
     margin-left: 7px;

@@ -2,6 +2,8 @@ import {updateIndexOfTasks,updateIndexOfProjects,create_human_readable_importanc
 let taskCompletionCounter=0;
 let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
 let taskDisplayDomContainer=document.querySelector('#display');
+let detailsModal=document.querySelector('#details_modal');
+let detailsModalContent=document.querySelector('#datails_modal_content');
 let createDomStructurForTask=(task,index)=>{
     let table=document.createElement('table');
     let tableRow=document.createElement('tr');
@@ -31,8 +33,16 @@ let createDomStructurForTask=(task,index)=>{
     detailsButton.setAttribute('data-index',`${index}`);
     detailsButton.addEventListener('click',(e)=>{
         let coolImportanceValue=create_human_readable_importance_vaule(task[e.target.dataset.index].importance);
-        alert(`Description:${task[e.target.dataset.index].description}
-        Importance:${coolImportanceValue}`);
+        let taskName=document.createElement('p');
+        let description=document.createElement('p');
+        let importance=document.createElement('p');
+        taskName.textContent=`Task Name:${task[e.target.dataset.index].title}`;
+        description.textContent=`Description:${task[e.target.dataset.index].description}`;
+        importance.textContent=`Importance:${coolImportanceValue}`;
+        detailsModalContent.appendChild(taskName);
+        detailsModalContent.appendChild(description);
+        detailsModalContent.appendChild(importance);
+        detailsModal.style.display='block';
     })
     dueDate.textContent=task[index].dueDate;
     checkbox.appendChild(checkboxInput);

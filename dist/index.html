@@ -2,7 +2,6 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width">
         <link rel="stylesheet" href="style.css">
         <title>Todo List</title>
     </head>
@@ -13,13 +12,21 @@
                 <h2 id='total_task_completed'>Completed(0)</h2>
             </div>
         </div>
+        
         <div class="sidenav">
             <a href="#" class="project_name" id='home'>Home</a>
             <button id='add_project'>Add Project</button>
         </div>
+
+        <div id='details_modal'>
+            <div id="datails_modal_content">
+                <span id="close_details_info">&times;</span>
+            </div>
+        </div>
+        
         <div id='container'>
             <form id='form'>
-                <span id="close">&times;</span>
+                <span id="closeForm">&times;</span>
                 <ul>
                     <li>
                         <lebel for='title'>Title</lebel>
@@ -49,8 +56,7 @@
         </div>    
         
         <div id="display">
-            <table id='table'>
-            </table>
+
         </div>
             
         <button id='add_task'>+</button>

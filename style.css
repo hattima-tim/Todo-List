@@ -1,15 +1,18 @@
-#header_container{
+h1 {
+  margin-left: 15%;
+}
+#h2_header_container{
   display: flex;
   justify-content: center;
 }
-#header{
+#h2_headers{
   display: flex;
   justify-content: space-between;
   width: 70%;
   border-bottom:2px solid #04AA6D;
 }
 
-#add_task{
+#add_task_button{
   position: absolute;
   font-size: 2em;
   bottom: 100px;
@@ -18,39 +21,8 @@
   height: 50px;
   border-radius: 50%;
 }
-#details_modal{
-  display: none;
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
-  left: 0;
-  top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
-  overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
-}
-#datails_modal_content{
-  background-color: #fefefe;
-  margin: 15% auto; /* 15% from the top and centered */
-  padding: 20px;
-  border: 1px solid #888;
-  width: 370px; /* Could be more or less, depending on screen size */
-}
-#close_details_info {
-  color: #aaa;
-  float: right;
-  font-size: 22px;
-  font-weight: bold;
-}
 
-#close_details_info:hover,
-#close_details_info:focus {
-  color: black;
-  text-decoration: none;
-  cursor: pointer;
-}
-#container {
+#form_container {
   display: none;
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
@@ -82,7 +54,7 @@ input[type=text], select, textarea {
 }
 
 /* Style the submit button with a specific background color etc */
-#submit {
+#form_submit_button {
   background-color: #04AA6D;
   color: white;
   padding: 10px 20px;
@@ -92,18 +64,72 @@ input[type=text], select, textarea {
 }
 
 /* When moving the mouse over the submit button, add a darker green color */
-#submit:hover {
+#form_submit_button:hover {
   background-color: #45a049;
 }
-#closeForm {
+#form_close_button {
   color: #aaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-#closeForm:hover,
-#closeForm:focus {
+#form_close_button:hover,
+#form_close_button:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#task_container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+table,tr {
+  width: 60%;
+  border: 2px solid black;
+  border-radius: 5px;
+  margin:10px;
+}
+td {
+  font-size: 1.2em;
+  width: 100px;
+  padding: 5px;
+}
+td button {
+  margin-left: 100px;
+}
+
+#details_modal{
+  display: none;
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+#datails_modal_content{
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 370px; /* Could be more or less, depending on screen size */
+}
+#details_modal_close_button {
+  color: #aaa;
+  float: right;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+#details_modal_close_button:hover,
+#details_modal_close_button:focus {
   color: black;
   text-decoration: none;
   cursor: pointer;
@@ -120,66 +146,41 @@ input[type=text], select, textarea {
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 20px;
   }
-  
-  .sidenav span{
-    color: #818181;
-    font-size: 1.1em;
-  }
 
-  .side_nav_project_name_holder{
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    cursor: pointer;
-  }
+.side_nav_project_name_holder{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
 
-  .sidenav a {
-    padding: 6px 8px 6px 16px;
-    text-decoration: none;
-    font-size: 25px;
-    color: #818181;
-    display: block;
-  }
-  
-  .sidenav a:hover {
-    color: #f1f1f1;
-  }
-  .sidenav span:hover{
-    color:#f1f1f1;
-    font-size: 1.1em;
-  }
-  .sidenav button{
-    margin-left: 7px;
-  }
+.sidenav a {
+  padding: 6px 8px 6px 16px;
+  text-decoration: none;
+  font-size: 25px;
+  color: #818181;
+  display: block;
+}
 
-  .main {
-    margin-left: 160px; /* Same as the width of the sidebar */
-    padding: 0px 10px;
-  }
+.sidenav span{
+  color: #818181;
+  font-size: 1.1em;
+}
 
-  #display {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
+.sidenav button{
+  margin-left: 7px;
+}
 
-  table,tr {
-    width: 60%;
-    border: 2px solid black;
-    border-radius: 5px;
-    margin:10px;
-  }
-  td {
-    font-size: 1.2em;
-    width: 100px;
-    padding: 5px;
-  }
-  td button{
-    margin-left: 100px;
-  }
+.sidenav a:hover {
+  color: #f1f1f1;
+}
+.sidenav span:hover{
+  color:#f1f1f1;
+  font-size: 1.1em;
+}
 
-  @media screen and (max-height: 450px) {
-    .sidenav {padding-top: 15px;}
-    .sidenav a {font-size: 18px;}
-  }
+@media screen and (max-height: 450px) {
+  .sidenav {padding-top: 15px;}
+  .sidenav a {font-size: 18px;}
+}
   

@@ -1,9 +1,9 @@
-let createTask=(importance,title,description,dueDate)=>{
+let createTask=(taskImportance,taskTitle,taskDescription,taskDueDate)=>{
 
-    return {importance,title,description,dueDate}
+    return {taskImportance,taskTitle,taskDescription,taskDueDate}
 }
-let sortedTasks=(task)=>{
-    return task.sort(function (a,b){
+let sortTasks=(project)=>{
+    return project.sort(function (a,b){
         return a.importance-b.importance;
     })
 }
@@ -13,8 +13,10 @@ let updateIndexOfTasks=(index)=>{
         let indexOfNextTask=Number(i)+1;
         let indexOfCheckbox=0;
         let indexOfDetailsButton=2;
-        taskList[indexOfNextTask].childNodes[indexOfCheckbox].firstChild.setAttribute('data-index',`${i}`);
-        taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild.setAttribute('data-index',`${i}`);
+        let taskCheckbox=taskList[indexOfNextTask].childNodes[indexOfCheckbox].firstChild;
+        let taskDetailsButton=taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild;
+        taskCheckbox.setAttribute('data-index',`${i}`);
+        taskDetailsButton.setAttribute('data-index',`${i}`);
     }
 }
 let updateIndexOfProjects=(index)=>{
@@ -24,25 +26,33 @@ let updateIndexOfProjects=(index)=>{
         projectNameList[indexOfNextproject].setAttribute('data-index',`${i}`);
     }
 }
+
+let removeTask=(e,project)=>{
+    let indexOfCurrentTask=e.target.dataset.index;
+    project.splice(indexOfCurrentTask,1);
+    updateIndexOfTasks(indexOfCurrentTask);
+    e.target.parentNode.parentNode.parentNode.remove();
+}
+
 let create_human_readable_importance_vaule=(value)=>{
-    let coolImportanceValue;
+    let importanceValue;
     switch(value){
         case '1':
-            coolImportanceValue='High';
+            importanceValue='High';
             break;
         case '2':
-            coolImportanceValue='medium';
+            importanceValue='medium';
             break;
         case '3':
-            coolImportanceValue='Low';
+            importanceValue='Low';
             break;
     }
-    return coolImportanceValue;
+    return importanceValue;
 }
 export {
     createTask,
-    sortedTasks,
-    updateIndexOfTasks,
+    sortTasks,
     updateIndexOfProjects,
+    removeTask,
     create_human_readable_importance_vaule
 }

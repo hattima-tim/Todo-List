@@ -6,8 +6,9 @@
         <title>Todo List</title>
     </head>
     <body>
-        <div id="header_container">
-            <div id='header'>
+        <h1>To-Do List</h1>
+        <div id="h2_header_container">
+            <div id='h2_headers'>
                 <h2 id="project_header">Home</h2>
                 <h2 id='total_task_completed'>Completed(0)</h2>
             </div>
@@ -20,13 +21,13 @@
 
         <div id='details_modal'>
             <div id="datails_modal_content">
-                <span id="close_details_info">&times;</span>
+                <span id="details_modal_close_button">&times;</span>
             </div>
         </div>
         
-        <div id='container'>
+        <div id='form_container'>
             <form id='form'>
-                <span id="closeForm">&times;</span>
+                <span id="form_close_button">&times;</span>
                 <ul>
                     <li>
                         <lebel for='title'>Title</lebel>
@@ -49,17 +50,17 @@
                         <input type="date" id="due_date" name="Due Date">
                     </li>
                     <li>
-                        <button id='submit' type="button">Submit</button>
+                        <button id='form_submit_button' type="button">Submit</button>
                     </li>
                 </ul> 
             </form>
         </div>    
         
-        <div id="display">
+        <div id="task_container">
 
         </div>
             
-        <button id='add_task'>+</button>
+        <button id='add_task_button'>+</button>
         <script src="main.js"></script>
     </body>
 </html>

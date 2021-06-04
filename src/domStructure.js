@@ -1,10 +1,25 @@
-import {updateIndexOfTasks,updateIndexOfProjects,create_human_readable_importance_vaule} from './applicationLogic';
+import {removeTask,updateIndexOfProjects,create_human_readable_importance_vaule} from './applicationLogic';
 let taskCompletionCounter=0;
 let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
-let taskDisplayDomContainer=document.querySelector('#display');
+let domContainerForTasks=document.querySelector('#task_container');
 let detailsModal=document.querySelector('#details_modal');
 let detailsModalContent=document.querySelector('#datails_modal_content');
-let createDomStructurForTask=(task,index)=>{
+
+let showDetailsModal=(e,project)=>{
+    let importanceValue=create_human_readable_importance_vaule(project[e.target.dataset.index].taskImportance);
+    let taskName=document.createElement('p');
+    let taskDescription=document.createElement('p');
+    let taskImportance=document.createElement('p');
+    taskName.textContent=`Task Name:${project[e.target.dataset.index].taskTitle}`;
+    taskDescription.textContent=`Description:${project[e.target.dataset.index].taskDescription}`;
+    taskImportance.textContent=`Importance:${importanceValue}`;
+    detailsModalContent.appendChild(taskName);
+    detailsModalContent.appendChild(taskDescription);
+    detailsModalContent.appendChild(taskImportance);
+    detailsModal.style.display='block';
+}
+
+let createDomStructurForTask=(project,index)=>{
     let table=document.createElement('table');
     let tableRow=document.createElement('tr');
     let checkbox=document.createElement('td');
@@ -15,6 +30,7 @@ let createDomStructurForTask=(task,index)=>{
     let dueDate=document.createElement('td');
     
     tableRow.classList.add('task_list');
+   
     checkboxInput.setAttribute('type','checkbox');
     checkboxInput.setAttribute('id','done');
     checkboxInput.setAttribute('name','done');
@@ -23,28 +39,19 @@ let createDomStructurForTask=(task,index)=>{
     checkboxInput.addEventListener('change',(e)=>{
         taskCompletionCounter+=1;
         taskCompletionCounterDOM.textContent=`Completed (${taskCompletionCounter})`;
-        let indexOfCurrentTask=e.target.dataset.index;
-        task.splice(indexOfCurrentTask,1);
-        updateIndexOfTasks(indexOfCurrentTask);
-        e.target.parentNode.parentNode.parentNode.remove();
+        removeTask(e,project);
     })
-    titleInfo.textContent=task[index].title;
+   
+    titleInfo.textContent=project[index].taskTitle;
+   
     detailsButton.textContent='Details';
     detailsButton.setAttribute('data-index',`${index}`);
     detailsButton.addEventListener('click',(e)=>{
-        let coolImportanceValue=create_human_readable_importance_vaule(task[e.target.dataset.index].importance);
-        let taskName=document.createElement('p');
-        let description=document.createElement('p');
-        let importance=document.createElement('p');
-        taskName.textContent=`Task Name:${task[e.target.dataset.index].title}`;
-        description.textContent=`Description:${task[e.target.dataset.index].description}`;
-        importance.textContent=`Importance:${coolImportanceValue}`;
-        detailsModalContent.appendChild(taskName);
-        detailsModalContent.appendChild(description);
-        detailsModalContent.appendChild(importance);
-        detailsModal.style.display='block';
+        showDetailsModal(e,project);
     })
-    dueDate.textContent=task[index].dueDate;
+   
+    dueDate.textContent=project[index].taskDueDate;
+   
     checkbox.appendChild(checkboxInput);
     tableRow.appendChild(checkbox);
     tableRow.appendChild(titleInfo);
@@ -52,13 +59,16 @@ let createDomStructurForTask=(task,index)=>{
     tableRow.appendChild(detailsInfo);
     tableRow.appendChild(dueDate);
     table.appendChild(tableRow);
-    taskDisplayDomContainer.appendChild(table);
+    domContainerForTasks.appendChild(table);
 }
 
 let sidenav=document.querySelector('.sidenav');
 let createDomStructurForProject=(projects,switchProject,createNewProjectButton)=>{
     projects.push([]);
+    let side_nav_project_name_container=document.createElement('div');
+    side_nav_project_name_container.classList.add('side_nav_project_name_holder');
     let projectName=prompt('Enter a name');
+    
     let aElement=document.createElement('a');
     aElement.textContent=`${projectName}`;
     aElement.classList.add('project_name');
@@ -67,11 +77,10 @@ let createDomStructurForProject=(projects,switchProject,createNewProjectButton)=
         let indexOfClickedProject=e.target.dataset.index;
         switchProject(indexOfClickedProject,projectName);
     });
-    let side_nav_project_name_container=document.createElement('div');
-    side_nav_project_name_container.classList.add('side_nav_project_name_holder');
-    let close=document.createElement('span');
-    close.textContent='x';
-    close.addEventListener('click',(e)=>{
+
+    let projectRemover=document.createElement('span');
+    projectRemover.textContent='x';
+    projectRemover.addEventListener('click',(e)=>{
         let indexOfCurrentProject=e.target.previousElementSibling.dataset.index;
         projects.splice(indexOfCurrentProject,1);
         updateIndexOfProjects(indexOfCurrentProject);
@@ -79,12 +88,12 @@ let createDomStructurForProject=(projects,switchProject,createNewProjectButton)=
         e.target.parentNode.remove();
     })
     side_nav_project_name_container.appendChild(aElement);
-    side_nav_project_name_container.appendChild(close);
+    side_nav_project_name_container.appendChild(projectRemover);
     sidenav.insertBefore(side_nav_project_name_container,createNewProjectButton);
     switchProject(projects.length-1,projectName);
 }
 export {
-    taskDisplayDomContainer,
+    domContainerForTasks,
     createDomStructurForTask,
     createDomStructurForProject
 }

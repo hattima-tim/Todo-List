@@ -1,8 +1,13 @@
-import {createTask,sortTasks} from './applicationLogic';
+import {createTask,sortTasks,showAllTasksOfHome,showAllCurrentProjects} from './applicationLogic';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
-let project;
-let projects=[[]];
+let projects=JSON.parse(localStorage.getItem('projectArray')) || [[]];
+let currentProjectTaskList;
+let projectName;
+let projectNameArray=JSON.parse(localStorage.getItem('projectNameArray')) || ["home"];
 let projectHeader=document.querySelector('#project_header');
+
+currentProjectTaskList=projects[0];
+showAllTasksOfHome(currentProjectTaskList);
 
 let formContainer=document.querySelector('#form_container');
 let addTaskButton=document.querySelector('#add_task_button');
@@ -23,10 +28,12 @@ formSubmitButton.addEventListener('click',(e)=>{
     let taskDueDate=`${form[3].value}`;
     
     let newTask=createTask(taskImportance,taskTitle,taskDescription,taskDueDate);
-    project=projects[e.target.dataset.index];
-    project.push(newTask);
+    currentProjectTaskList=projects[e.target.dataset.index];
+    currentProjectTaskList.push(newTask);
     
-    let sortedTasks= sortTasks(project);
+    localStorage.setItem('projectArray',JSON.stringify(projects));
+    
+    let sortedTasks= sortTasks(currentProjectTaskList);
     while (domContainerForTasks.firstChild) {
         domContainerForTasks.firstChild.remove();
     }
@@ -52,16 +59,24 @@ detailsModalCloseButton.addEventListener('click',()=>{
 
 let createNewProjectButton=document.querySelector('#add_project');
 createNewProjectButton.addEventListener('click',()=>{
-    createDomStructurForProject(projects,switchProject,createNewProjectButton)
+    projects.push([]);
+    projectName=prompt('Enter a Name');
+    projectNameArray.push(projectName);
+    
+    localStorage.setItem('projectArray',JSON.stringify(projects));
+    localStorage.setItem('projectNameArray',JSON.stringify(projectNameArray));
+    
+    let index=projects.length-1;
+    createDomStructurForProject(switchProject,createNewProjectButton,projectName,index)
 })
 
 let switchProject=(index,projectName)=>{
-    project=projects[index];
+    currentProjectTaskList=projects[index];
     while (domContainerForTasks.firstChild) {
         domContainerForTasks.firstChild.remove();
     }
-    for(let i=0;i<project.length;i++){
-        createDomStructurForTask(project,i);
+    for(let i=0;i<currentProjectTaskList.length;i++){
+        createDomStructurForTask(currentProjectTaskList,i);
     }
     formSubmitButton.setAttribute('data-index',`${index}`);
     projectHeader.textContent=`${projectName}`
@@ -70,6 +85,14 @@ let switchProject=(index,projectName)=>{
 let home=document.querySelector('#home');
 home.setAttribute('data-index',`${0}`);
 home.addEventListener('click',(e)=>{
-    switchProject(e.target.dataset.index);
-    projectHeader.textContent='Home';
+    switchProject(e.target.dataset.index,'Home');
 })
+
+showAllCurrentProjects();
+
+switchProject(0,'Home');
+export {
+    projects,
+    projectNameArray,
+    switchProject
+}

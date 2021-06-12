@@ -4,6 +4,10 @@ let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
 let domContainerForTasks=document.querySelector('#task_container');
 let detailsModal=document.querySelector('#details_modal');
 let detailsModalContent=document.querySelector('#datails_modal_content');
+let containerOfFormForEditingTask=document.querySelector('#container_of_form_for_editing_task');
+let formForEditingTask=document.querySelector('#form_for_editing_task');
+let task_importance_dropdown_of_form_for_task_editing=document.querySelector('#task_importance_dropdown_of_form_for_task_editing');
+let submitButtonForUpdatingTask=document.querySelector('#submit_button_of_form_for_editing_task');
 
 let showDetailsModal=(e,currentProjectTaskList)=>{
     let importanceValue=create_human_readable_importance_vaule(currentProjectTaskList[e.target.dataset.index].taskImportance);
@@ -28,7 +32,10 @@ let createDomStructurForTask=(currentProjectTaskList,index)=>{
     let detailsInfo=document.createElement('td');
     let detailsButton=document.createElement('button');
     let dueDate=document.createElement('td');
-    
+    let taskEditButtonContainer=document.createElement('td');
+    let taskEditButton=document.createElement('button');
+    let taskEditIcon=document.createElement('i');
+
     tableRow.classList.add('task_list');
    
     checkboxInput.setAttribute('type','checkbox');
@@ -51,13 +58,29 @@ let createDomStructurForTask=(currentProjectTaskList,index)=>{
     })
    
     dueDate.textContent=currentProjectTaskList[index].taskDueDate;
-   
+    
+    taskEditIcon.setAttribute('data-index',`${index}`);
+    taskEditIcon.addEventListener('click',(e)=>{
+        containerOfFormForEditingTask.style.display='flex';
+        containerOfFormForEditingTask.style.justifyContent='center';
+        containerOfFormForEditingTask.style.alignItems='center';
+        formForEditingTask[0].value=currentProjectTaskList[e.target.dataset.index].taskTitle;
+        formForEditingTask[1].value=currentProjectTaskList[e.target.dataset.index].taskDescription;
+        task_importance_dropdown_of_form_for_task_editing.value=currentProjectTaskList[e.target.dataset.index].taskImportance;
+        formForEditingTask[3].value=currentProjectTaskList[e.target.dataset.index].taskDueDate;
+        submitButtonForUpdatingTask.setAttribute('data-index',`${e.target.dataset.index}`);
+    })
+    taskEditIcon.setAttribute('class','far fa-edit');
+
     checkbox.appendChild(checkboxInput);
     tableRow.appendChild(checkbox);
     tableRow.appendChild(titleInfo);
     detailsInfo.appendChild(detailsButton);
     tableRow.appendChild(detailsInfo);
     tableRow.appendChild(dueDate);
+    taskEditButton.appendChild(taskEditIcon);
+    taskEditButtonContainer.appendChild(taskEditButton);
+    tableRow.appendChild(taskEditButtonContainer);
     table.appendChild(tableRow);
     domContainerForTasks.appendChild(table);
 }

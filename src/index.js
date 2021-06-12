@@ -1,4 +1,4 @@
-import {createTask,sortTasks,showAllTasksOfHome,showAllCurrentProjects} from './applicationLogic';
+import {createTask,showAllTasksOfCurrentProject,showAllCurrentProjects} from './applicationLogic';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
 let projects=JSON.parse(localStorage.getItem('projectArray')) || [[]];
 let currentProjectTaskList;
@@ -7,7 +7,7 @@ let projectNameArray=JSON.parse(localStorage.getItem('projectNameArray')) || ["h
 let projectHeader=document.querySelector('#project_header');
 
 currentProjectTaskList=projects[0];
-showAllTasksOfHome(currentProjectTaskList);
+showAllTasksOfCurrentProject(currentProjectTaskList);
 
 let formContainer=document.querySelector('#form_container');
 let addTaskButton=document.querySelector('#add_task_button');
@@ -18,10 +18,10 @@ addTaskButton.addEventListener('click',()=>{
 })
 
 let formSubmitButton=document.querySelector('#form_submit_button');
+let importanceDropdown=document.querySelector('#importance');
 formSubmitButton.setAttribute('data-index',`${0}`);
 formSubmitButton.addEventListener('click',(e)=>{
     formContainer.style.display='none';
-    let importanceDropdown=document.querySelector('#importance');
     let taskTitle=`${form[0].value}`;
     let taskDescription=`${form[1].value}`;
     let taskImportance=`${importanceDropdown.value}`;
@@ -32,14 +32,9 @@ formSubmitButton.addEventListener('click',(e)=>{
     currentProjectTaskList.push(newTask);
     
     localStorage.setItem('projectArray',JSON.stringify(projects));
-    
-    let sortedTasks= sortTasks(currentProjectTaskList);
-    while (domContainerForTasks.firstChild) {
-        domContainerForTasks.firstChild.remove();
-    }
-    for (let i=0;i<sortedTasks.length;i++){
-        createDomStructurForTask(sortedTasks,i);
-    }
+
+    showAllTasksOfCurrentProject(currentProjectTaskList);
+    form.reset();
 })
 
 let formCloseButton=document.querySelector('#form_close_button');
@@ -55,6 +50,31 @@ detailsModalCloseButton.addEventListener('click',()=>{
         detailsModalContent.lastChild.remove();
     }
     detailsModal.style.display='none';
+})
+
+let containerOfFormForEditingTask=document.querySelector('#container_of_form_for_editing_task');
+let formForEditingTask=document.querySelector('#form_for_editing_task');
+let task_importance_dropdown_of_form_for_task_editing=document.querySelector('#task_importance_dropdown_of_form_for_task_editing');
+let submitButtonForUpdatingTask=document.querySelector('#submit_button_of_form_for_editing_task');
+submitButtonForUpdatingTask.addEventListener('click',(e)=>{
+    containerOfFormForEditingTask.style.display='none';
+    let taskTitle=formForEditingTask[0].value;
+    let taskDescription=formForEditingTask[1].value;
+    let taskImportance=task_importance_dropdown_of_form_for_task_editing.value;
+    let taskDueDate=formForEditingTask[3].value;
+    
+    let newTask=createTask(taskImportance,taskTitle,taskDescription,taskDueDate);
+    let index_of_the_task_which_need_to_be_updated=e.target.dataset.index;
+    currentProjectTaskList.splice(index_of_the_task_which_need_to_be_updated,1,newTask);
+
+    localStorage.setItem('projectArray',JSON.stringify(projects));
+
+    showAllTasksOfCurrentProject(currentProjectTaskList);
+})
+
+let closeButtonOfFormForEditingTask=document.querySelector('#close_button_of_form_for_editing_task');
+closeButtonOfFormForEditingTask.addEventListener('click',()=>{
+    containerOfFormForEditingTask.style.display='none';
 })
 
 let createNewProjectButton=document.querySelector('#add_project');
@@ -91,6 +111,7 @@ home.addEventListener('click',(e)=>{
 showAllCurrentProjects();
 
 switchProject(0,'Home');
+
 export {
     projects,
     projectNameArray,

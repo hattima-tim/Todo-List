@@ -3,6 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="stylesheet" href="style.css">
+        <script src="https://kit.fontawesome.com/53348e0e14.js" crossorigin="anonymous"></script>
         <title>Todo List</title>
     </head>
     <body>
@@ -31,15 +32,15 @@
                 <ul>
                     <li>
                         <lebel for='title'>Title</lebel>
-                        <input type="text" id="title" name="Title">
+                        <input type="text" id="title" name="Title" required>
                     </li>
                     <li>
                         <label for="description">Description</label>
-                        <textarea id="description" name="Description"></textarea>
+                        <textarea id="description" name="Description" required></textarea>
                     </li>
                     <li>
                         <label for="importance">Choose importance</label>
-                        <select name="importance" id="importance">
+                        <select name="importance" id="importance" required>
                             <option value="1">High</option>
                             <option value="2">Medium</option>
                             <option value="3">Low</option>
@@ -47,7 +48,7 @@
                     </li>
                     <li>
                         <label for="due_date">Due Date</label>
-                        <input type="date" id="due_date" name="Due Date">
+                        <input type="date" id="due_date" name="Due Date" required>
                     </li>
                     <li>
                         <button id='form_submit_button' type="button">Submit</button>
@@ -56,6 +57,37 @@
             </form>
         </div>    
         
+        <div id='container_of_form_for_editing_task'>
+            <form id='form_for_editing_task'>
+                <span id="close_button_of_form_for_editing_task">&times;</span>
+                <ul>
+                    <li>
+                        <lebel for='title'>Title</lebel>
+                        <input type="text" id="title" name="Title" required>
+                    </li>
+                    <li>
+                        <label for="description">Description</label>
+                        <textarea id="description" name="Description" required></textarea>
+                    </li>
+                    <li>
+                        <label for="importance">Choose importance</label>
+                        <select name="importance" id="task_importance_dropdown_of_form_for_task_editing" required>
+                            <option value="1">High</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Low</option>
+                        </select>
+                    </li>
+                    <li>
+                        <label for="due_date">Due Date</label>
+                        <input type="date" id="due_date" name="Due Date" required>
+                    </li>
+                    <li>
+                        <button id='submit_button_of_form_for_editing_task' type="button">Update Task</button>
+                    </li>
+                </ul> 
+            </form>
+        </div>
+
         <div id="task_container">
 
         </div>

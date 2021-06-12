@@ -11,7 +11,7 @@ let sortTasks=(currentProjectTaskList)=>{
     })
 }
 
-let showAllTasksOfHome=(currentProjectTaskList)=>{
+let showAllTasksOfCurrentProject=(currentProjectTaskList)=>{
     let sortedTasks= sortTasks(currentProjectTaskList);
     while (domContainerForTasks.firstChild) {
         domContainerForTasks.firstChild.remove();
@@ -90,7 +90,7 @@ let create_human_readable_importance_vaule=(value)=>{
 export {
     createTask,
     sortTasks,
-    showAllTasksOfHome,
+    showAllTasksOfCurrentProject,
     showAllCurrentProjects,
     updateIndexOfProjects,
     removeTask,

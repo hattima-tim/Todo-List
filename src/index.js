@@ -1,10 +1,15 @@
 import {createTask,showAllTasksOfCurrentProject,showAllCurrentProjects} from './applicationLogic';
-import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
+import {createDomStructurForProject} from './domStructure';
 let projects=JSON.parse(localStorage.getItem('projectArray')) || [[]];
 let currentProjectTaskList;
 let projectName;
 let projectNameArray=JSON.parse(localStorage.getItem('projectNameArray')) || ["home"];
 let projectHeader=document.querySelector('#project_header');
+
+let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
+let taskCompletionCounter=JSON.parse(localStorage.getItem('totalCompletedTask')) || 0;
+localStorage.setItem('totalCompletedTask',JSON.stringify(taskCompletionCounter));
+taskCompletionCounterDOM.textContent=`Completed (${taskCompletionCounter})`;
 
 currentProjectTaskList=projects[0];
 showAllTasksOfCurrentProject(currentProjectTaskList);
@@ -55,8 +60,8 @@ detailsModalCloseButton.addEventListener('click',()=>{
 let containerOfFormForEditingTask=document.querySelector('#container_of_form_for_editing_task');
 let formForEditingTask=document.querySelector('#form_for_editing_task');
 let task_importance_dropdown_of_form_for_task_editing=document.querySelector('#task_importance_dropdown_of_form_for_task_editing');
-let submitButtonForUpdatingTask=document.querySelector('#submit_button_of_form_for_editing_task');
-submitButtonForUpdatingTask.addEventListener('click',(e)=>{
+let submitButtonForEditingTask=document.querySelector('#submit_button_of_form_for_editing_task');
+submitButtonForEditingTask.addEventListener('click',(e)=>{
     containerOfFormForEditingTask.style.display='none';
     let taskTitle=formForEditingTask[0].value;
     let taskDescription=formForEditingTask[1].value;
@@ -64,8 +69,8 @@ submitButtonForUpdatingTask.addEventListener('click',(e)=>{
     let taskDueDate=formForEditingTask[3].value;
     
     let newTask=createTask(taskImportance,taskTitle,taskDescription,taskDueDate);
-    let index_of_the_task_which_need_to_be_updated=e.target.dataset.index;
-    currentProjectTaskList.splice(index_of_the_task_which_need_to_be_updated,1,newTask);
+    let index_of_the_task_which_need_to_be_Edited=e.target.dataset.index;
+    currentProjectTaskList.splice(index_of_the_task_which_need_to_be_Edited,1,newTask);
 
     localStorage.setItem('projectArray',JSON.stringify(projects));
 
@@ -92,12 +97,7 @@ createNewProjectButton.addEventListener('click',()=>{
 
 let switchProject=(index,projectName)=>{
     currentProjectTaskList=projects[index];
-    while (domContainerForTasks.firstChild) {
-        domContainerForTasks.firstChild.remove();
-    }
-    for(let i=0;i<currentProjectTaskList.length;i++){
-        createDomStructurForTask(currentProjectTaskList,i);
-    }
+    showAllTasksOfCurrentProject(currentProjectTaskList);
     formSubmitButton.setAttribute('data-index',`${index}`);
     projectHeader.textContent=`${projectName}`
 }

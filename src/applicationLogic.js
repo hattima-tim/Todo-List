@@ -36,10 +36,18 @@ let updateIndexOfTasks=(index)=>{
         let indexOfNextTask=Number(i)+1;
         let indexOfCheckbox=0;
         let indexOfDetailsButton=2;
+        let indexOfTaskEditIconContainerElement=4;
+        let indexOfTaskDeleteIconContainerElement=5;
+
         let taskCheckbox=taskList[indexOfNextTask].childNodes[indexOfCheckbox].firstChild;
         let taskDetailsButton=taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild;
+        let taskEditIcon=taskList[indexOfNextTask].childNodes[indexOfTaskEditIconContainerElement].firstChild;
+        let taskDeleteIcon=taskList[indexOfNextTask].childNodes[indexOfTaskDeleteIconContainerElement].firstChild;
+        
         taskCheckbox.setAttribute('data-index',`${i}`);
         taskDetailsButton.setAttribute('data-index',`${i}`);
+        taskEditIcon.setAttribute('data-index',`${i}`);
+        taskDeleteIcon.setAttribute('data-index',`${i}`);
     }
 }
 let updateIndexOfProjects=(index)=>{
@@ -87,6 +95,21 @@ let create_human_readable_importance_vaule=(value)=>{
     }
     return importanceValue;
 }
+
+let showFormForEditingTask=(e,currentProjectTaskList)=>{
+    let containerOfFormForEditingTask=document.querySelector('#container_of_form_for_editing_task');
+    let formForEditingTask=document.querySelector('#form_for_editing_task');
+    let task_importance_dropdown_of_form_for_task_editing=document.querySelector('#task_importance_dropdown_of_form_for_task_editing');
+
+    containerOfFormForEditingTask.style.display='flex';
+    containerOfFormForEditingTask.style.justifyContent='center';
+    containerOfFormForEditingTask.style.alignItems='center';
+    formForEditingTask[0].value=currentProjectTaskList[e.target.dataset.index].taskTitle;
+    formForEditingTask[1].value=currentProjectTaskList[e.target.dataset.index].taskDescription;
+    task_importance_dropdown_of_form_for_task_editing.value=currentProjectTaskList[e.target.dataset.index].taskImportance;
+    formForEditingTask[3].value=currentProjectTaskList[e.target.dataset.index].taskDueDate;
+}
+
 export {
     createTask,
     sortTasks,
@@ -95,5 +118,6 @@ export {
     updateIndexOfProjects,
     removeTask,
     removeProject,
-    create_human_readable_importance_vaule
+    create_human_readable_importance_vaule,
+    showFormForEditingTask
 }

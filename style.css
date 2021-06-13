@@ -144,6 +144,15 @@ td button {
   margin-left: 100px;
 }
 
+i{ /* i is task edit and task delete icon's container element*/
+  float: right;
+}
+
+i:hover,
+i:focus{
+  transform: scale(1.1);
+}
+
 #details_modal{
   display: none;
   position: fixed; /* Stay in place */
@@ -210,7 +219,7 @@ td button {
 }
 
 .sidenav button{
-  margin-left: 7px;
+  margin-left: 12px;
 }
 
 .sidenav a:hover {

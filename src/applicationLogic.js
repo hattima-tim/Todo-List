@@ -30,24 +30,23 @@ let showAllCurrentProjects=()=>{
     }
 }
 
-let updateIndexOfTasks=(index)=>{
+let updateIndexOfTasks=()=>{
     let taskList=document.querySelectorAll('.task_list');
-    for (let i=index;i<taskList.length-1;i++){
-        let indexOfNextTask=Number(i)+1;
+    for (let i=0;i<=taskList.length-1;i++){
         let indexOfCheckbox=0;
         let indexOfDetailsButton=2;
         let indexOfTaskEditIconContainerElement=4;
         let indexOfTaskDeleteIconContainerElement=5;
 
-        let taskCheckbox=taskList[indexOfNextTask].childNodes[indexOfCheckbox].firstChild;
-        let taskDetailsButton=taskList[indexOfNextTask].childNodes[indexOfDetailsButton].firstChild;
-        let taskEditIcon=taskList[indexOfNextTask].childNodes[indexOfTaskEditIconContainerElement].firstChild;
-        let taskDeleteIcon=taskList[indexOfNextTask].childNodes[indexOfTaskDeleteIconContainerElement].firstChild;
+        let taskCheckbox=taskList[i].childNodes[indexOfCheckbox].firstChild;
+        let taskDetailsButton=taskList[i].childNodes[indexOfDetailsButton].firstChild;
+        let taskEditIconContainer=taskList[i].childNodes[indexOfTaskEditIconContainerElement];
+        let taskDeleteIconContainer=taskList[i].childNodes[indexOfTaskDeleteIconContainerElement];
         
         taskCheckbox.setAttribute('data-index',`${i}`);
         taskDetailsButton.setAttribute('data-index',`${i}`);
-        taskEditIcon.setAttribute('data-index',`${i}`);
-        taskDeleteIcon.setAttribute('data-index',`${i}`);
+        taskEditIconContainer.setAttribute('data-index',`${i}`);
+        taskDeleteIconContainer.setAttribute('data-index',`${i}`);
     }
 }
 let updateIndexOfProjects=(index)=>{
@@ -64,8 +63,8 @@ let removeTask=(e,currentProjectTaskList)=>{
     
     localStorage.setItem('projectArray',JSON.stringify(projects));
     
-    updateIndexOfTasks(indexOfCurrentTask);
-    e.target.parentNode.parentNode.parentNode.remove();
+    e.target.closest('table').remove();
+    updateIndexOfTasks();
 }
 
 let removeProject=(e)=>{

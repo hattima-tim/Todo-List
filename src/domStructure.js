@@ -59,15 +59,15 @@ let createDomStructurForTask=(currentProjectTaskList,index)=>{
     dueDate.textContent=currentProjectTaskList[index].taskDueDate;
     
     taskEditIcon.setAttribute('class','far fa-edit');
-    taskEditIcon.setAttribute('data-index',`${index}`);
-    taskEditIcon.addEventListener('click',(e)=>{
+    taskEditIconContainer.setAttribute('data-index',`${index}`);
+    taskEditIconContainer.addEventListener('click',(e)=>{
         showFormForEditingTask(e,currentProjectTaskList);
         submitButtonForEditingTask.setAttribute('data-index',`${e.target.dataset.index}`);
     })
 
     taskDeleteIcon.setAttribute('class','far fa-trash-alt');
-    taskDeleteIcon.setAttribute('data-index',`${index}`);
-    taskDeleteIcon.addEventListener('click',(e)=>{
+    taskDeleteIconContainer.setAttribute('data-index',`${index}`);
+    taskDeleteIconContainer.addEventListener('click',(e)=>{
         removeTask(e,currentProjectTaskList);
     })
 

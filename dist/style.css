@@ -147,6 +147,11 @@ td button {
   margin-left: 100px;
 }
 
+[data-index] {
+   /* select all elements with data-index attribute */
+  cursor: pointer;
+}
+
 svg {
   /* make svgs unclickable */
   pointer-events: none; 

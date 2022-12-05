@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-
+import { firebaseConfig, signIn } from "./firebaseLogic";
 import {
   createTask,
   showAllTasksOfCurrentProject,
@@ -7,18 +7,11 @@ import {
 } from "./applicationLogic";
 import { createDomStructurForProject } from "./domStructure";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDVcyTrhhQce-iGjNGS63F5Cayr5ZuDizA",
-  authDomain: "todo-list-7046d.firebaseapp.com",
-  projectId: "todo-list-7046d",
-  storageBucket: "todo-list-7046d.appspot.com",
-  messagingSenderId: "1089066977716",
-  appId: "1:1089066977716:web:99030fdd3bbc5583908ae1",
-  measurementId: "G-J27P39SHDS",
-};
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+const signInArea = document.querySelector('.sign_in');
+signInArea.addEventListener('click',signIn);
 
 let projects = JSON.parse(localStorage.getItem("projectArray")) || [[]];
 let currentProjectTaskList;

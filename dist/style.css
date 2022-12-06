@@ -197,7 +197,7 @@ svg {
   z-index: 1; /* Stay on top */
   top: 0; /* Stay at the top */
   left: 0;
-  background-color: #111; /* Black */
+  background-color: black;
   overflow-x: scroll;
   padding-top: 20px;
 }
@@ -232,6 +232,28 @@ svg {
 .sidenav span:hover {
   color: #f1f1f1;
   font-size: 1.1em;
+}
+
+.sign_in{
+  display: flex;
+  cursor: pointer;
+}
+
+.sign_in img{
+  position: fixed;
+  width: 3rem;
+  bottom: -.93rem;  
+}
+
+.sign_in button{
+  position: fixed;
+  bottom: 1rem;
+  left: 1.6rem;
+  background: none;
+  color: white;
+  border: none;
+  font-size: initial;
+  cursor: pointer;
 }
 
 @media screen and (max-height: 450px) {

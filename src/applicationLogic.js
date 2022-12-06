@@ -1,4 +1,4 @@
-import {projects,projectNameArray,switchProject} from './index';
+import {allProjectsTasks,projectNameArray,switchProject} from './index';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
 
 let createTask=(taskImportance,taskTitle,taskDescription,taskDueDate)=>{
@@ -22,7 +22,7 @@ let showAllTasksOfCurrentProject=(currentProjectTaskList)=>{
 }
 
 let showAllCurrentProjects=()=>{
-    for (let i=1;i<projects.length;i++){
+    for (let i=1;i<allProjectsTasks.length;i++){
         let projectName=projectNameArray[i];
         let index=i;
         let createNewProjectButton=document.querySelector('#add_project');
@@ -61,7 +61,7 @@ let removeTask=(e,currentProjectTaskList)=>{
     let indexOfCurrentTask=e.target.dataset.index;
     currentProjectTaskList.splice(indexOfCurrentTask,1);
     
-    localStorage.setItem('projectArray',JSON.stringify(projects));
+    localStorage.setItem('allProjectsTasksArr',JSON.stringify(allProjectsTasks));
     
     e.target.closest('table').remove();
     updateIndexOfTasks();
@@ -69,10 +69,10 @@ let removeTask=(e,currentProjectTaskList)=>{
 
 let removeProject=(e)=>{
     let indexOfCurrentProject=e.target.previousElementSibling.dataset.index;
-    projects.splice(indexOfCurrentProject,1);
+    allProjectsTasks.splice(indexOfCurrentProject,1);
     projectNameArray.splice(indexOfCurrentProject,1)
     
-    localStorage.setItem('projectArray',JSON.stringify(projects));
+    localStorage.setItem('allProjectsTasksArr',JSON.stringify(allProjectsTasks));
     localStorage.setItem('projectNameArray',JSON.stringify(projectNameArray));
     
     updateIndexOfProjects(indexOfCurrentProject);

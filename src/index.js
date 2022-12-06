@@ -17,7 +17,7 @@ signInArea.addEventListener('click',signIn);
 const signOutButton = document.querySelector('.sign_out');
 signOutButton.addEventListener('click',signOutUser);
 
-let projects = JSON.parse(localStorage.getItem("projectArray")) || [[]];
+let allProjectsTasks = JSON.parse(localStorage.getItem("allProjectsTasksArr")) || [[]];
 let currentProjectTaskList;
 let projectName;
 let projectNameArray = JSON.parse(localStorage.getItem("projectNameArray")) || [
@@ -34,7 +34,7 @@ localStorage.setItem(
 );
 taskCompletionCounterDOM.textContent = `Completed (${taskCompletionCounter})`;
 
-currentProjectTaskList = projects[0];
+currentProjectTaskList = allProjectsTasks[0];
 showAllTasksOfCurrentProject(currentProjectTaskList);
 
 let formContainer = document.querySelector("#form_container");
@@ -61,10 +61,10 @@ formSubmitButton.addEventListener("click", (e) => {
     taskDescription,
     taskDueDate
   );
-  currentProjectTaskList = projects[e.target.dataset.index];
+  currentProjectTaskList = allProjectsTasks[e.target.dataset.index];
   currentProjectTaskList.push(newTask);
 
-  localStorage.setItem("projectArray", JSON.stringify(projects));
+  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
 
   showAllTasksOfCurrentProject(currentProjectTaskList);
   form.reset();
@@ -117,7 +117,7 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
     newTask
   );
 
-  localStorage.setItem("projectArray", JSON.stringify(projects));
+  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
 
   showAllTasksOfCurrentProject(currentProjectTaskList);
 });
@@ -131,14 +131,14 @@ closeButtonOfFormForEditingTask.addEventListener("click", () => {
 
 let createNewProjectButton = document.querySelector("#add_project");
 createNewProjectButton.addEventListener("click", () => {
-  projects.push([]);
+  allProjectsTasks.push([]);
   projectName = prompt("Enter a Name");
   projectNameArray.push(projectName);
 
-  localStorage.setItem("projectArray", JSON.stringify(projects));
+  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
   localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 
-  let index = projects.length - 1;
+  let index = allProjectsTasks.length - 1;
   createDomStructurForProject(
     switchProject,
     createNewProjectButton,
@@ -148,7 +148,7 @@ createNewProjectButton.addEventListener("click", () => {
 });
 
 let switchProject = (index, projectName) => {
-  currentProjectTaskList = projects[index];
+  currentProjectTaskList = allProjectsTasks[index];
   showAllTasksOfCurrentProject(currentProjectTaskList);
   formSubmitButton.setAttribute("data-index", `${index}`);
   projectHeader.textContent = `${projectName}`;
@@ -164,4 +164,4 @@ showAllCurrentProjects();
 
 switchProject(0, "Home");
 
-export { projects, projectNameArray, switchProject };
+export { allProjectsTasks, projectNameArray, switchProject };

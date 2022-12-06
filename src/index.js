@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { firebaseConfig, signIn, signOutUser } from "./firebaseLogic";
+import { firebaseConfig, signIn, signOutUser, initFirebaseAuth } from "./firebaseLogic";
 import {
   createTask,
   showAllTasksOfCurrentProject,
@@ -9,6 +9,7 @@ import { createDomStructurForProject } from "./domStructure";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+initFirebaseAuth();
 
 const signInArea = document.querySelector('.sign_in');
 signInArea.addEventListener('click',signIn);

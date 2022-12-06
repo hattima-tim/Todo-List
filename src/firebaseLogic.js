@@ -66,9 +66,15 @@ function initFirebaseAuth() {
   onAuthStateChanged(getAuth(), authStateObserver);
 }
 
+// Returns true if a user is signed-in.
+function isUserSignedIn() {
+  return !!getAuth().currentUser;
+}
+
 export {
   firebaseConfig,
   signIn,
   signOutUser,
   initFirebaseAuth,
+  isUserSignedIn
 };

@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { firebaseConfig, signIn } from "./firebaseLogic";
+import { firebaseConfig, signIn, signOutUser } from "./firebaseLogic";
 import {
   createTask,
   showAllTasksOfCurrentProject,
@@ -12,6 +12,9 @@ const app = initializeApp(firebaseConfig);
 
 const signInArea = document.querySelector('.sign_in');
 signInArea.addEventListener('click',signIn);
+
+const signOutButton = document.querySelector('.sign_out');
+signOutButton.addEventListener('click',signOutUser);
 
 let projects = JSON.parse(localStorage.getItem("projectArray")) || [[]];
 let currentProjectTaskList;

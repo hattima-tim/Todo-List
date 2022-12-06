@@ -256,6 +256,29 @@ svg {
   cursor: pointer;
 }
 
+.user_info{
+  display: none;
+}
+
+.user_pic{
+  position: fixed;
+  width: 1.8rem;
+  bottom: .74rem;  
+  border-radius: 50%;
+  left: 10px;
+}
+
+.sign_out{
+  position: fixed;
+  bottom: 1rem;
+  left: 1.8rem;
+  background: none;
+  color: white;
+  border: none;
+  font-size: initial;
+  cursor: pointer;
+}
+
 @media screen and (max-height: 450px) {
   .sidenav {
     padding-top: 15px;

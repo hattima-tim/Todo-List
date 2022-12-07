@@ -1,28 +1,40 @@
 import { initializeApp } from "firebase/app";
-import { firebaseConfig, signIn, signOutUser, initFirebaseAuth } from "./firebaseLogic";
+
+import {
+  firebaseConfig,
+  signIn,
+  signOutUser,
+  initFirebaseAuth,
+  saveTaskToDB,
+} from "./firebaseLogic";
+
 import {
   createTask,
   showAllTasksOfCurrentProject,
   showAllCurrentProjects,
 } from "./applicationLogic";
+
 import { createDomStructurForProject } from "./domStructure";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 initFirebaseAuth();
 
-const signInArea = document.querySelector('.sign_in');
-signInArea.addEventListener('click',signIn);
+const signInArea = document.querySelector(".sign_in");
+signInArea.addEventListener("click", signIn);
 
-const signOutButton = document.querySelector('.sign_out');
-signOutButton.addEventListener('click',signOutUser);
+const signOutButton = document.querySelector(".sign_out");
+signOutButton.addEventListener("click", signOutUser);
 
-let allProjectsTasks = JSON.parse(localStorage.getItem("allProjectsTasksArr")) || [[]];
+let allProjectsTasks = JSON.parse(
+  localStorage.getItem("allProjectsTasksArr")
+) || [[]];
 let currentProjectTaskList;
 let projectName;
 let projectNameArray = JSON.parse(localStorage.getItem("projectNameArray")) || [
   "home",
 ];
+let currentProjectName = projectNameArray[0];
 let projectHeader = document.querySelector("#project_header");
 
 let taskCompletionCounterDOM = document.querySelector("#total_task_completed");
@@ -64,8 +76,8 @@ formSubmitButton.addEventListener("click", (e) => {
   currentProjectTaskList = allProjectsTasks[e.target.dataset.index];
   currentProjectTaskList.push(newTask);
 
-  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-
+  // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
+  saveTaskToDB(newTask,currentProjectName);
   showAllTasksOfCurrentProject(currentProjectTaskList);
   form.reset();
 });
@@ -97,6 +109,7 @@ let task_importance_dropdown_of_form_for_task_editing = document.querySelector(
 let submitButtonForEditingTask = document.querySelector(
   "#submit_button_of_form_for_editing_task"
 );
+
 submitButtonForEditingTask.addEventListener("click", (e) => {
   containerOfFormForEditingTask.style.display = "none";
   let taskTitle = formForEditingTask[0].value;
@@ -110,6 +123,7 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
     taskDescription,
     taskDueDate
   );
+
   let index_of_the_task_which_need_to_be_Edited = e.target.dataset.index;
   currentProjectTaskList.splice(
     index_of_the_task_which_need_to_be_Edited,
@@ -134,7 +148,6 @@ createNewProjectButton.addEventListener("click", () => {
   allProjectsTasks.push([]);
   projectName = prompt("Enter a Name");
   projectNameArray.push(projectName);
-
   localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
   localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 

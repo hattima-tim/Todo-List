@@ -96,6 +96,20 @@ async function saveTaskToDB(task,currentProjectName) {
   }
 }
 
+async function createNewProjectInDB(projectName) {
+  const db = getFirestore();
+  const userDocRef = doc(db,`users/${getUserName()}/projects/${projectName}`);
+  
+  try {
+    await setDoc(userDocRef,{
+        [projectName]:arrayUnion()
+    },{merge:true} );
+  }
+  catch(error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
+}
+
 export {
   firebaseConfig,
   signIn,
@@ -103,4 +117,5 @@ export {
   initFirebaseAuth,
   isUserSignedIn,
   saveTaskToDB,
+  createNewProjectInDB
 };

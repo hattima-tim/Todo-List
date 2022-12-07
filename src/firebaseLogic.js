@@ -6,6 +6,13 @@ import {
   signOut,
 } from "firebase/auth";
 
+import {
+  getFirestore,
+  setDoc,
+  doc,
+  arrayUnion,
+} from 'firebase/firestore';
+
 const firebaseConfig = {
   apiKey: "AIzaSyDVcyTrhhQce-iGjNGS63F5Cayr5ZuDizA",
   authDomain: "todo-list-7046d.firebaseapp.com",
@@ -71,10 +78,29 @@ function isUserSignedIn() {
   return !!getAuth().currentUser;
 }
 
+ // Returns the signed-in user's display name.
+ function getUserName() {
+  return getAuth().currentUser.displayName;
+}
+
+async function saveTaskToDB(task,currentProjectName) {
+  const db = getFirestore();
+  const userDocRef = doc(db,`users/${getUserName()}/projects/${currentProjectName}`);
+  try {
+    await setDoc(userDocRef,{
+        [currentProjectName]:arrayUnion(task)
+    },{merge:true} );
+  }
+  catch(error) {
+    console.error('Error writing new message to Firebase Database', error);
+  }
+}
+
 export {
   firebaseConfig,
   signIn,
   signOutUser,
   initFirebaseAuth,
-  isUserSignedIn
+  isUserSignedIn,
+  saveTaskToDB,
 };

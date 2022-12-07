@@ -5,7 +5,9 @@ import {
   signIn,
   signOutUser,
   initFirebaseAuth,
+  isUserSignedIn,
   saveTaskToDB,
+  createNewProjectInDB
 } from "./firebaseLogic";
 
 import {
@@ -148,8 +150,11 @@ createNewProjectButton.addEventListener("click", () => {
   allProjectsTasks.push([]);
   projectName = prompt("Enter a Name");
   projectNameArray.push(projectName);
-  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-  localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
+  currentProjectName = projectName;
+
+  createNewProjectInDB(projectName);
+  // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
+  // localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 
   let index = allProjectsTasks.length - 1;
   createDomStructurForProject(
@@ -161,6 +166,7 @@ createNewProjectButton.addEventListener("click", () => {
 });
 
 let switchProject = (index, projectName) => {
+  currentProjectName = projectName;
   currentProjectTaskList = allProjectsTasks[index];
   showAllTasksOfCurrentProject(currentProjectTaskList);
   formSubmitButton.setAttribute("data-index", `${index}`);

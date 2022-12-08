@@ -11,7 +11,7 @@ import {
   setDoc,
   doc,
   arrayUnion,
-} from 'firebase/firestore';
+} from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDVcyTrhhQce-iGjNGS63F5Cayr5ZuDizA",
@@ -78,35 +78,35 @@ function isUserSignedIn() {
   return !!getAuth().currentUser;
 }
 
- // Returns the signed-in user's display name.
- function getUserName() {
+// Returns the signed-in user's display name.
+function getUserName() {
   return getAuth().currentUser.displayName;
 }
 
-async function saveTaskToDB(task,currentProjectName) {
+async function saveToDB(projectName, task, operation) {
   const db = getFirestore();
-  const userDocRef = doc(db,`users/${getUserName()}/projects/${currentProjectName}`);
+  const projectCollectionRef = doc(db, `users/${getUserName()}/projects`);
+  const userDocRef = doc(db, `users/${getUserName()}/projects/${projectName}`);
   try {
-    await setDoc(userDocRef,{
-        [currentProjectName]:arrayUnion(task)
-    },{merge:true} );
-  }
-  catch(error) {
-    console.error('Error writing new message to Firebase Database', error);
-  }
-}
-
-async function createNewProjectInDB(projectName) {
-  const db = getFirestore();
-  const userDocRef = doc(db,`users/${getUserName()}/projects/${projectName}`);
-  
-  try {
-    await setDoc(userDocRef,{
-        [projectName]:arrayUnion()
-    },{merge:true} );
-  }
-  catch(error) {
-    console.error('Error writing new message to Firebase Database', error);
+    switch (operation) {
+      case "createProject":
+        // Create a new project in the database
+        await setDoc(
+          userDocRef,
+          { [projectName]: arrayUnion() }
+        );
+        break;
+      case "addTask":
+        // Add a new task to an existing project in the database
+        await setDoc(
+          userDocRef,
+          { [projectName]: arrayUnion(task) },
+          { merge: true }
+        );
+        break;
+    }
+  } catch (error) {
+    console.error("Error writing to Firebase Database", error);
   }
 }
 
@@ -116,6 +116,5 @@ export {
   signOutUser,
   initFirebaseAuth,
   isUserSignedIn,
-  saveTaskToDB,
-  createNewProjectInDB
+  saveToDB
 };

@@ -6,8 +6,7 @@ import {
   signOutUser,
   initFirebaseAuth,
   isUserSignedIn,
-  saveTaskToDB,
-  createNewProjectInDB
+  saveToDB
 } from "./firebaseLogic";
 
 import {
@@ -79,7 +78,7 @@ formSubmitButton.addEventListener("click", (e) => {
   currentProjectTaskList.push(newTask);
 
   // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-  saveTaskToDB(newTask,currentProjectName);
+  saveToDB(currentProjectName,newTask,'addTask');
   showAllTasksOfCurrentProject(currentProjectTaskList);
   form.reset();
 });
@@ -152,7 +151,7 @@ createNewProjectButton.addEventListener("click", () => {
   projectNameArray.push(projectName);
   currentProjectName = projectName;
 
-  createNewProjectInDB(projectName);
+  saveToDB(projectName,null,'createProject');
   // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
   // localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 

@@ -6,7 +6,8 @@ import {
   signOutUser,
   getProfilePicUrl,
   isUserSignedIn,
-  saveToDB
+  saveToDB,
+  getTaskCompletionCountFromCloud
 } from "./firebaseLogic";
 
 import {
@@ -19,13 +20,25 @@ import { createDomStructurForProject } from "./domStructure";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+let taskCompletionCount = 0;
+let taskCompletionCountDOM = document.querySelector("#total_task_completed");
+taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
+
 const authStateObserver = async (user) => {
   const userInfo = document.querySelector(".user_info");
   const userPicElement = document.querySelector(".user_pic");
   const signInArea = document.querySelector(".sign_in");
 
   if (user) {
-    // User is signed in!    
+    // User is signed in!
+    taskCompletionCount = await getTaskCompletionCountFromCloud();
+    localStorage.setItem(
+      "taskCompletionCount",
+      JSON.stringify(taskCompletionCount)
+    );
+    taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
+    
     const profilePicUrl = getProfilePicUrl();
     userPicElement.src = `${profilePicUrl}`;
     userInfo.style.display = "block";
@@ -57,15 +70,6 @@ let projectNameArray = JSON.parse(localStorage.getItem("projectNameArray")) || [
 ];
 let currentProjectName = projectNameArray[0];
 let projectHeader = document.querySelector("#project_header");
-
-let taskCompletionCounterDOM = document.querySelector("#total_task_completed");
-let taskCompletionCounter =
-  JSON.parse(localStorage.getItem("totalCompletedTask")) || 0;
-localStorage.setItem(
-  "totalCompletedTask",
-  JSON.stringify(taskCompletionCounter)
-);
-taskCompletionCounterDOM.textContent = `Completed (${taskCompletionCounter})`;
 
 currentProjectTaskList = allProjectsTasks[0];
 showAllTasksOfCurrentProject(currentProjectTaskList);

@@ -51,7 +51,7 @@ function getUserName() {
   return getAuth().currentUser.displayName;
 }
 
-async function saveToDB(projectName, task, operation) {
+async function saveToDB(projectName, task, operation, taskCompletionCount) {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
   const userProjectRef = doc(
@@ -72,6 +72,15 @@ async function saveToDB(projectName, task, operation) {
           { merge: true }
         );
         break;
+      case "setCompletionCount":
+        await setDoc(userRef, {
+          taskCompletionCount: taskCompletionCount,
+        });
+        localStorage.setItem(
+          "taskCompletionCount",
+          JSON.stringify(taskCompletionCount)
+        );
+        break;
     }
   } catch (error) {
     console.error("Error writing to Firebase Database", error);
@@ -84,5 +93,5 @@ export {
   signOutUser,
   getProfilePicUrl,
   isUserSignedIn,
-  saveToDB
+  saveToDB,
 };

@@ -10,6 +10,7 @@ import {
   setDoc,
   doc,
   arrayUnion,
+  getDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -87,6 +88,18 @@ async function saveToDB(projectName, task, operation, taskCompletionCount) {
   }
 }
 
+const getTaskCompletionCountFromCloud = async ()=>{
+  const db = getFirestore();
+  const userRef = doc(db, `users/${getUserName()}`);
+  const userSnap = await getDoc(userRef);
+  const taskCompletionCountInDB = userSnap.data().taskCompletionCount;
+
+  if(taskCompletionCountInDB){
+    return taskCompletionCountInDB;
+  }
+  return 0;
+}
+
 export {
   firebaseConfig,
   signIn,
@@ -94,4 +107,5 @@ export {
   getProfilePicUrl,
   isUserSignedIn,
   saveToDB,
+  getTaskCompletionCountFromCloud
 };

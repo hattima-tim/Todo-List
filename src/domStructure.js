@@ -1,5 +1,7 @@
+import { saveToDB } from './firebaseLogic';
 import {removeTask,removeProject,create_human_readable_importance_vaule,showFormForEditingTask} from './applicationLogic';
-let taskCompletionCounterDOM=document.querySelector('#total_task_completed');
+
+let taskCompletionCountDOM=document.querySelector('#total_task_completed');
 let domContainerForTasks=document.querySelector('#task_container');
 let detailsModal=document.querySelector('#details_modal');
 let detailsModalContent=document.querySelector('#datails_modal_content');
@@ -40,11 +42,12 @@ let createDomStructurForTask=(currentProjectTaskList,index)=>{
     checkboxInput.setAttribute('name','done');
     checkboxInput.setAttribute('value','done');
     checkboxInput.setAttribute('data-index',`${index}`);
-    checkboxInput.addEventListener('change',(e)=>{
-        let taskCompletionCounter=JSON.parse(localStorage.getItem('totalCompletedTask'));
-        taskCompletionCounter+=1;
-        localStorage.setItem('totalCompletedTask',JSON.stringify(taskCompletionCounter));
-        taskCompletionCounterDOM.textContent=`Completed (${taskCompletionCounter})`;
+    checkboxInput.addEventListener('change',async (e)=>{
+        let taskCompletionCount= JSON.parse(localStorage.getItem("taskCompletionCount"));
+        taskCompletionCount+=1;
+        saveToDB(null,null,'setCompletionCount',taskCompletionCount);
+
+        taskCompletionCountDOM.textContent=`Completed (${taskCompletionCount})`;
         removeTask(e,currentProjectTaskList);
     })
    

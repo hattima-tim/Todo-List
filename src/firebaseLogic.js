@@ -1,6 +1,5 @@
 import {
   getAuth,
-  onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
   signOut,
@@ -42,37 +41,6 @@ function getProfilePicUrl() {
   );
 }
 
-// Triggers when the auth state change for instance when the user signs-in or signs-out.
-function authStateObserver(user) {
-  const userInfo = document.querySelector(".user_info");
-  const userPicElement = document.querySelector(".user_pic");
-  const signInArea = document.querySelector(".sign_in");
-
-  if (user) {
-    // User is signed in!
-    // Get the signed-in user's profile pic and name.
-    const profilePicUrl = getProfilePicUrl();
-    // Set the user's profile pic and name.
-    userPicElement.src = `${profilePicUrl}`;
-    // Show user's profile and sign-out button.
-    userInfo.style.display = "block";
-    // Hide sign-in button.
-    signInArea.style.display = "none";
-  } else {
-    // User is signed out!
-    // Hide user's profile and sign-out button.
-    userInfo.style.display = "none";
-    // Show sign-in button.
-    signInArea.style.display = "block";
-  }
-}
-
-// Initialize firebase auth
-function initFirebaseAuth() {
-  // Listen to auth state changes.
-  onAuthStateChanged(getAuth(), authStateObserver);
-}
-
 // Returns true if a user is signed-in.
 function isUserSignedIn() {
   return !!getAuth().currentUser;
@@ -85,21 +53,21 @@ function getUserName() {
 
 async function saveToDB(projectName, task, operation) {
   const db = getFirestore();
-  const projectCollectionRef = doc(db, `users/${getUserName()}/projects`);
-  const userDocRef = doc(db, `users/${getUserName()}/projects/${projectName}`);
+  const userRef = doc(db, `users/${getUserName()}`);
+  const userProjectRef = doc(
+    db,
+    `users/${getUserName()}/projects/${projectName}`
+  );
   try {
     switch (operation) {
       case "createProject":
         // Create a new project in the database
-        await setDoc(
-          userDocRef,
-          { [projectName]: arrayUnion() }
-        );
+        await setDoc(userProjectRef, { [projectName]: arrayUnion() });
         break;
       case "addTask":
         // Add a new task to an existing project in the database
         await setDoc(
-          userDocRef,
+          userProjectRef,
           { [projectName]: arrayUnion(task) },
           { merge: true }
         );
@@ -114,7 +82,7 @@ export {
   firebaseConfig,
   signIn,
   signOutUser,
-  initFirebaseAuth,
+  getProfilePicUrl,
   isUserSignedIn,
   saveToDB
 };

@@ -1,10 +1,10 @@
 import { initializeApp } from "firebase/app";
-
+import { onAuthStateChanged, getAuth } from "firebase/auth";
 import {
   firebaseConfig,
   signIn,
   signOutUser,
-  initFirebaseAuth,
+  getProfilePicUrl,
   isUserSignedIn,
   saveToDB
 } from "./firebaseLogic";
@@ -19,7 +19,27 @@ import { createDomStructurForProject } from "./domStructure";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-initFirebaseAuth();
+const authStateObserver = async (user) => {
+  const userInfo = document.querySelector(".user_info");
+  const userPicElement = document.querySelector(".user_pic");
+  const signInArea = document.querySelector(".sign_in");
+
+  if (user) {
+    // User is signed in!    
+    const profilePicUrl = getProfilePicUrl();
+    userPicElement.src = `${profilePicUrl}`;
+    userInfo.style.display = "block";
+    signInArea.style.display = "none";
+  } else {
+    // User is signed out!
+    userInfo.style.display = "none";
+    signInArea.style.display = "block";
+  }
+}
+
+// Initialize firebase auth
+// Listen to auth state changes.
+onAuthStateChanged(getAuth(), authStateObserver);
 
 const signInArea = document.querySelector(".sign_in");
 signInArea.addEventListener("click", signIn);

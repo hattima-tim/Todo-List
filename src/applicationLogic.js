@@ -21,8 +21,8 @@ let showAllTasksOfCurrentProject=(currentProjectTaskList)=>{
     }
 }
 
-let showAllCurrentProjects=()=>{
-    for (let i=1;i<allProjectsTasks.length;i++){
+let showAllCurrentProjects=(projectNameArray)=>{
+    for (let i=1;i<projectNameArray.length;i++){
         let projectName=projectNameArray[i];
         let index=i;
         let createNewProjectButton=document.querySelector('#add_project');

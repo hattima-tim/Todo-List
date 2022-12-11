@@ -7,7 +7,10 @@ import {
   getProfilePicUrl,
   isUserSignedIn,
   saveToDB,
-  getTaskCompletionCountFromCloud
+  getTaskCompletionCountFromCloud,
+  getTaskListFromCloud,
+  getProjectNameArrayFromCloud,
+  updateTaskListInCloud
 } from "./firebaseLogic";
 
 import {
@@ -25,35 +28,6 @@ let taskCompletionCount = 0;
 let taskCompletionCountDOM = document.querySelector("#total_task_completed");
 taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
 
-const authStateObserver = async (user) => {
-  const userInfo = document.querySelector(".user_info");
-  const userPicElement = document.querySelector(".user_pic");
-  const signInArea = document.querySelector(".sign_in");
-
-  if (user) {
-    // User is signed in!
-    taskCompletionCount = await getTaskCompletionCountFromCloud();
-    localStorage.setItem(
-      "taskCompletionCount",
-      JSON.stringify(taskCompletionCount)
-    );
-    taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
-    
-    const profilePicUrl = getProfilePicUrl();
-    userPicElement.src = `${profilePicUrl}`;
-    userInfo.style.display = "block";
-    signInArea.style.display = "none";
-  } else {
-    // User is signed out!
-    userInfo.style.display = "none";
-    signInArea.style.display = "block";
-  }
-}
-
-// Initialize firebase auth
-// Listen to auth state changes.
-onAuthStateChanged(getAuth(), authStateObserver);
-
 const signInArea = document.querySelector(".sign_in");
 signInArea.addEventListener("click", signIn);
 
@@ -63,16 +37,6 @@ signOutButton.addEventListener("click", signOutUser);
 let allProjectsTasks = JSON.parse(
   localStorage.getItem("allProjectsTasksArr")
 ) || [[]];
-let currentProjectTaskList;
-let projectName;
-let projectNameArray = JSON.parse(localStorage.getItem("projectNameArray")) || [
-  "home",
-];
-let currentProjectName = projectNameArray[0];
-let projectHeader = document.querySelector("#project_header");
-
-currentProjectTaskList = allProjectsTasks[0];
-showAllTasksOfCurrentProject(currentProjectTaskList);
 
 let formContainer = document.querySelector("#form_container");
 let addTaskButton = document.querySelector("#add_task_button");
@@ -82,6 +46,8 @@ addTaskButton.addEventListener("click", () => {
   formContainer.style.alignItems = "center";
 });
 
+let currentProjectTaskList;
+let currentProjectName = 'Home';
 let formSubmitButton = document.querySelector("#form_submit_button");
 let importanceDropdown = document.querySelector("#importance");
 formSubmitButton.setAttribute("data-index", `${0}`);
@@ -98,11 +64,15 @@ formSubmitButton.addEventListener("click", (e) => {
     taskDescription,
     taskDueDate
   );
-  currentProjectTaskList = allProjectsTasks[e.target.dataset.index];
+  currentProjectTaskList = JSON.parse(
+    localStorage.getItem(`${currentProjectName}`)
+  )
   currentProjectTaskList.push(newTask);
 
-  // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-  saveToDB(currentProjectName,newTask,'addTask');
+  const currentProjectTaskListJSON = JSON.stringify(currentProjectTaskList);
+  localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
+  saveToDB(currentProjectName,currentProjectTaskListJSON,'addTaskList');
+  
   showAllTasksOfCurrentProject(currentProjectTaskList);
   form.reset();
 });
@@ -156,8 +126,9 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
     newTask
   );
 
-  localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-
+  const currentProjectTaskListJSON = JSON.stringify(currentProjectTaskList);
+  localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
+  
   showAllTasksOfCurrentProject(currentProjectTaskList);
 });
 
@@ -168,29 +139,35 @@ closeButtonOfFormForEditingTask.addEventListener("click", () => {
   containerOfFormForEditingTask.style.display = "none";
 });
 
+let projectName;
+let projectNameArray = ['Home'] // default, but the list will be updated on sign-in
 let createNewProjectButton = document.querySelector("#add_project");
 createNewProjectButton.addEventListener("click", () => {
-  allProjectsTasks.push([]);
+  currentProjectTaskList = [];
   projectName = prompt("Enter a Name");
   projectNameArray.push(projectName);
   currentProjectName = projectName;
 
   saveToDB(projectName,null,'createProject');
-  // localStorage.setItem("allProjectsTasksArr", JSON.stringify(allProjectsTasks));
-  // localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
+  localStorage.setItem(`${currentProjectName}`, JSON.stringify(currentProjectTaskList));
+  localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 
-  let index = allProjectsTasks.length - 1;
+  let index = projectNameArray.length - 1;
   createDomStructurForProject(
     switchProject,
     createNewProjectButton,
-    projectName,
+    currentProjectName,
     index
   );
 });
 
+let projectHeader = document.querySelector("#project_header");
 let switchProject = (index, projectName) => {
   currentProjectName = projectName;
-  currentProjectTaskList = allProjectsTasks[index];
+  currentProjectTaskList = JSON.parse(
+    localStorage.getItem(`${currentProjectName}`)
+  );
+
   showAllTasksOfCurrentProject(currentProjectTaskList);
   formSubmitButton.setAttribute("data-index", `${index}`);
   projectHeader.textContent = `${projectName}`;
@@ -202,8 +179,46 @@ home.addEventListener("click", (e) => {
   switchProject(e.target.dataset.index, "Home");
 });
 
-showAllCurrentProjects();
+const saveAllProjectsTaskListsToLocalStorage = async(projectNameArray)=>{
+  for(const projectName of projectNameArray){    
+    const projectTaskList = await getTaskListFromCloud(projectName);
+    localStorage.setItem(`${projectName}`,JSON.stringify(projectTaskList));
+  }
+}
 
-switchProject(0, "Home");
+const authStateObserver = async (user) => {
+  const userInfo = document.querySelector(".user_info");
+  const userPicElement = document.querySelector(".user_pic");
+  const signInArea = document.querySelector(".sign_in");
+
+  if (user) {
+    // User is signed in!
+    taskCompletionCount = await getTaskCompletionCountFromCloud();
+    localStorage.setItem(
+      "taskCompletionCount",
+      JSON.stringify(taskCompletionCount)
+    );
+    taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
+    
+    projectNameArray =await getProjectNameArrayFromCloud();
+    await saveAllProjectsTaskListsToLocalStorage(projectNameArray);
+    
+    showAllCurrentProjects(projectNameArray); 
+    switchProject(0, "Home");
+
+    const profilePicUrl = getProfilePicUrl();
+    userPicElement.src = `${profilePicUrl}`;
+    userInfo.style.display = "block";
+    signInArea.style.display = "none";
+  } else {
+    // User is signed out!
+    userInfo.style.display = "none";
+    signInArea.style.display = "block";
+  }
+}
+
+// Initialize firebase auth
+// Listen to auth state changes.
+onAuthStateChanged(getAuth(), authStateObserver);
 
 export { allProjectsTasks, projectNameArray, switchProject };

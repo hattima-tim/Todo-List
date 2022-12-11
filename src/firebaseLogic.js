@@ -56,92 +56,100 @@ function getUserName() {
   return getAuth().currentUser.displayName;
 }
 
-async function saveToDB(projectName, taskList, operation, taskCompletionCount) {
+async function createProjectInCloud(projectName) {
   const db = getFirestore();
-  const userRef = doc(db, `users/${getUserName()}`);
   const userProjectRef = doc(
     db,
     `users/${getUserName()}/projects/${projectName}`
   );
+
   try {
-    switch (operation) {
-      case "createProject":
-        // Create a new project in the database
-        await setDoc(userProjectRef, { [projectName]: '[]' });
-        break;
-      case "addTaskList":
-        // Add a new task to an existing project in the database
-        await setDoc(
-          userProjectRef,
-          { [projectName]: taskList }, // taskList is in json format
-        );
-        break;
-      case "setCompletionCount":
-        await setDoc(userRef, {
-          taskCompletionCount: taskCompletionCount,
-        });
-        localStorage.setItem(
-          "taskCompletionCount",
-          JSON.stringify(taskCompletionCount)
-        );
-        break;
-    }
+    await setDoc(userProjectRef, { [projectName]: "[]" });
   } catch (error) {
-    console.error("Error writing to Firebase Database", error);
+    console.error("Error creating new project", error);
   }
 }
 
-const getTaskCompletionCountFromCloud = async ()=>{
+async function addTaskListToCloud(projectName, taskList) {
+  const db = getFirestore();
+  const userProjectRef = doc(
+    db,
+    `users/${getUserName()}/projects/${projectName}`
+  );
+
+  try {
+    await setDoc(
+      userProjectRef,
+      { [projectName]: taskList } // taskList is in json format
+    );
+  } catch (error) {
+    console.error("Error with adding tasks", error);
+  }
+}
+
+async function setCompletionCountInCloud(taskCompletionCount) {
+  const db = getFirestore();
+  const userRef = doc(db, `users/${getUserName()}`);
+
+  try {
+    await setDoc(userRef, {
+      taskCompletionCount: taskCompletionCount,
+    });
+  } catch (error) {
+    console.error("Error with setting completion count", error);
+  }
+}
+
+const getTaskCompletionCountFromCloud = async () => {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
   const userSnap = await getDoc(userRef);
   const taskCompletionCountInDB = userSnap.data().taskCompletionCount;
 
-  if(taskCompletionCountInDB){
+  if (taskCompletionCountInDB) {
     return taskCompletionCountInDB;
   }
   return 0;
-}
+};
 
-const getTaskListFromCloud = async (projectName)=>{
+const getTaskListFromCloud = async (projectName) => {
   const db = getFirestore();
-  const projectRef = doc(
-    db,
-    `users/${getUserName()}/projects/${projectName}`
-  );
-  try{
+  const projectRef = doc(db, `users/${getUserName()}/projects/${projectName}`);
+  try {
     const userSnap = await getDoc(projectRef);
     const taskListJSON = `${userSnap.data()[projectName]}`;
-    const taskList = JSON.parse(taskListJSON)
+    const taskList = JSON.parse(taskListJSON);
 
     return taskList;
-  }catch (error) {
+  } catch (error) {
     console.error("Error getting task list from firestore", error);
   }
-}
+};
 
-const getProjectNameArrayFromCloud = async()=>{
+const getProjectNameArrayFromCloud = async () => {
   const db = getFirestore();
-  
+
   try {
-    const querySnapshot = await getDocs(collection(db, `users/${getUserName()}/projects`));
-    
-    if(querySnapshot.empty){
-       saveToDB('Home',null,'createProject');
-       return ['Home'];
+    const querySnapshot = await getDocs(
+      collection(db, `users/${getUserName()}/projects`)
+    );
+
+    if (querySnapshot.empty) {
+      createProjectInCloud("Home");
+      return ["Home"];
     }
-    
+
     let projectArray = [];
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
       projectArray.push(doc.id);
     });
-    
+
     return projectArray;
   } catch (error) {
-    console.error('Error getting project lists form firestore', error);
+    console.error("Error getting project lists form firestore", error);
   }
-}
+};
 
 export {
   firebaseConfig,
@@ -149,8 +157,10 @@ export {
   signOutUser,
   getProfilePicUrl,
   isUserSignedIn,
-  saveToDB,
+  createProjectInCloud,
+  addTaskListToCloud,
+  setCompletionCountInCloud,
   getTaskCompletionCountFromCloud,
   getTaskListFromCloud,
-  getProjectNameArrayFromCloud
+  getProjectNameArrayFromCloud,
 };

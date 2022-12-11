@@ -6,11 +6,11 @@ import {
   signOutUser,
   getProfilePicUrl,
   isUserSignedIn,
-  saveToDB,
+  createProjectInCloud,
   getTaskCompletionCountFromCloud,
+  addTaskListToCloud,
   getTaskListFromCloud,
   getProjectNameArrayFromCloud,
-  updateTaskListInCloud
 } from "./firebaseLogic";
 
 import {
@@ -47,7 +47,7 @@ addTaskButton.addEventListener("click", () => {
 });
 
 let currentProjectTaskList;
-let currentProjectName = 'Home';
+let currentProjectName = "Home";
 let formSubmitButton = document.querySelector("#form_submit_button");
 let importanceDropdown = document.querySelector("#importance");
 formSubmitButton.setAttribute("data-index", `${0}`);
@@ -66,13 +66,13 @@ formSubmitButton.addEventListener("click", (e) => {
   );
   currentProjectTaskList = JSON.parse(
     localStorage.getItem(`${currentProjectName}`)
-  )
+  );
   currentProjectTaskList.push(newTask);
 
   const currentProjectTaskListJSON = JSON.stringify(currentProjectTaskList);
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
-  saveToDB(currentProjectName,currentProjectTaskListJSON,'addTaskList');
-  
+  addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
+
   showAllTasksOfCurrentProject(currentProjectTaskList);
   form.reset();
 });
@@ -128,7 +128,7 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
 
   const currentProjectTaskListJSON = JSON.stringify(currentProjectTaskList);
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
-  saveToDB(currentProjectName,currentProjectTaskListJSON,'addTaskList');
+  addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
 
   showAllTasksOfCurrentProject(currentProjectTaskList);
 });
@@ -141,18 +141,21 @@ closeButtonOfFormForEditingTask.addEventListener("click", () => {
 });
 
 let projectName;
-let projectNameArray = ['Home'] // default, but the list will be updated on sign-in
+let projectNameArray = ["Home"]; // default, but the list will be updated on sign-in
 let createNewProjectButton = document.querySelector("#add_project");
 createNewProjectButton.addEventListener("click", () => {
   projectName = prompt("Enter a Name");
-  if(!projectName) return;
-  
+  if (!projectName) return;
+
   currentProjectTaskList = [];
   projectNameArray.push(projectName);
   currentProjectName = projectName;
 
-  saveToDB(projectName,null,'createProject');
-  localStorage.setItem(`${currentProjectName}`, JSON.stringify(currentProjectTaskList));
+  createProjectInCloud(projectName);
+  localStorage.setItem(
+    `${currentProjectName}`,
+    JSON.stringify(currentProjectTaskList)
+  );
   localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
 
   let index = projectNameArray.length - 1;
@@ -182,12 +185,12 @@ home.addEventListener("click", (e) => {
   switchProject(e.target.dataset.index, "Home");
 });
 
-const saveAllProjectsTaskListsToLocalStorage = async(projectNameArray)=>{
-  for(const projectName of projectNameArray){    
+const saveAllProjectsTaskListsToLocalStorage = async (projectNameArray) => {
+  for (const projectName of projectNameArray) {
     const projectTaskList = await getTaskListFromCloud(projectName);
-    localStorage.setItem(`${projectName}`,JSON.stringify(projectTaskList));
+    localStorage.setItem(`${projectName}`, JSON.stringify(projectTaskList));
   }
-}
+};
 
 const authStateObserver = async (user) => {
   const userInfo = document.querySelector(".user_info");
@@ -202,11 +205,11 @@ const authStateObserver = async (user) => {
       JSON.stringify(taskCompletionCount)
     );
     taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
-    
-    projectNameArray =await getProjectNameArrayFromCloud();
+
+    projectNameArray = await getProjectNameArrayFromCloud();
     await saveAllProjectsTaskListsToLocalStorage(projectNameArray);
-    
-    showAllCurrentProjects(projectNameArray); 
+
+    showAllCurrentProjects(projectNameArray);
     switchProject(0, "Home");
 
     const profilePicUrl = getProfilePicUrl();
@@ -218,7 +221,7 @@ const authStateObserver = async (user) => {
     userInfo.style.display = "none";
     signInArea.style.display = "block";
   }
-}
+};
 
 // Initialize firebase auth
 // Listen to auth state changes.

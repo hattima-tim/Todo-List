@@ -120,6 +120,29 @@ const getTaskListFromCloud = async (projectName)=>{
   }
 }
 
+const getProjectNameArrayFromCloud = async()=>{
+  const db = getFirestore();
+  
+  try {
+    const querySnapshot = await getDocs(collection(db, `users/${getUserName()}/projects`));
+    
+    if(querySnapshot.empty){
+       saveToDB('Home',null,'createProject');
+       return ['Home'];
+    }
+    
+    let projectArray = [];
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      projectArray.push(doc.id);
+    });
+    
+    return projectArray;
+  } catch (error) {
+    console.error('Error getting project lists form firestore', error);
+  }
+}
+
 export {
   firebaseConfig,
   signIn,
@@ -129,4 +152,5 @@ export {
   saveToDB,
   getTaskCompletionCountFromCloud,
   getTaskListFromCloud,
+  getProjectNameArrayFromCloud
 };

@@ -128,7 +128,8 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
 
   const currentProjectTaskListJSON = JSON.stringify(currentProjectTaskList);
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
-  
+  saveToDB(currentProjectName,currentProjectTaskListJSON,'addTaskList');
+
   showAllTasksOfCurrentProject(currentProjectTaskList);
 });
 

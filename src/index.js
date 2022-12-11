@@ -144,8 +144,10 @@ let projectName;
 let projectNameArray = ['Home'] // default, but the list will be updated on sign-in
 let createNewProjectButton = document.querySelector("#add_project");
 createNewProjectButton.addEventListener("click", () => {
-  currentProjectTaskList = [];
   projectName = prompt("Enter a Name");
+  if(!projectName) return;
+  
+  currentProjectTaskList = [];
   projectNameArray.push(projectName);
   currentProjectName = projectName;
 

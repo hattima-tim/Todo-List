@@ -10,7 +10,11 @@ import {
   setDoc,
   doc,
   arrayUnion,
+  arrayRemove,
   getDoc,
+  getDocs,
+  updateDoc,
+  collection,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -52,7 +56,7 @@ function getUserName() {
   return getAuth().currentUser.displayName;
 }
 
-async function saveToDB(projectName, task, operation, taskCompletionCount) {
+async function saveToDB(projectName, taskList, operation, taskCompletionCount) {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
   const userProjectRef = doc(
@@ -63,14 +67,13 @@ async function saveToDB(projectName, task, operation, taskCompletionCount) {
     switch (operation) {
       case "createProject":
         // Create a new project in the database
-        await setDoc(userProjectRef, { [projectName]: arrayUnion() });
+        await setDoc(userProjectRef, { [projectName]: '[]' });
         break;
-      case "addTask":
+      case "addTaskList":
         // Add a new task to an existing project in the database
         await setDoc(
           userProjectRef,
-          { [projectName]: arrayUnion(task) },
-          { merge: true }
+          { [projectName]: taskList }, // taskList is in json format
         );
         break;
       case "setCompletionCount":

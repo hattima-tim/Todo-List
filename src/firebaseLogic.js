@@ -103,6 +103,23 @@ const getTaskCompletionCountFromCloud = async ()=>{
   return 0;
 }
 
+const getTaskListFromCloud = async (projectName)=>{
+  const db = getFirestore();
+  const projectRef = doc(
+    db,
+    `users/${getUserName()}/projects/${projectName}`
+  );
+  try{
+    const userSnap = await getDoc(projectRef);
+    const taskListJSON = `${userSnap.data()[projectName]}`;
+    const taskList = JSON.parse(taskListJSON)
+
+    return taskList;
+  }catch (error) {
+    console.error("Error getting task list from firestore", error);
+  }
+}
+
 export {
   firebaseConfig,
   signIn,
@@ -110,5 +127,6 @@ export {
   getProfilePicUrl,
   isUserSignedIn,
   saveToDB,
-  getTaskCompletionCountFromCloud
+  getTaskCompletionCountFromCloud,
+  getTaskListFromCloud,
 };

@@ -87,14 +87,24 @@ async function addTaskListToCloud(projectName, taskList) {
   }
 }
 
-async function setCompletionCountInCloud(taskCompletionCount) {
+async function setCompletionCountInCloud(taskCompletionCount,operation) {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
 
   try {
-    await setDoc(userRef, {
-      taskCompletionCount: taskCompletionCount,
-    });
+    switch (operation) {
+      case 'add':        
+        await setDoc(userRef, {
+          taskCompletionCount: taskCompletionCount,
+        },{merge:true});
+        break;
+      
+      case 'update':
+        await updateDoc(userRef, {
+          taskCompletionCount: taskCompletionCount,
+        });
+        break;
+    }
   } catch (error) {
     console.error("Error with setting completion count", error);
   }

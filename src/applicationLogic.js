@@ -1,5 +1,6 @@
 import {allProjectsTasks,projectNameArray,switchProject} from './index';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
+import { addTaskListToCloud } from './firebaseLogic';
 
 let createTask=(taskImportance,taskTitle,taskDescription,taskDueDate)=>{
 
@@ -11,13 +12,13 @@ let sortTasks=(currentProjectTaskList)=>{
     })
 }
 
-let showAllTasksOfCurrentProject=(currentProjectTaskList)=>{
+let showAllTasksOfCurrentProject=(currentProjectTaskList,currentProjectName)=>{
     let sortedTasks= sortTasks(currentProjectTaskList);
     while (domContainerForTasks.firstChild) {
         domContainerForTasks.firstChild.remove();
     }
     for (let i=0;i<sortedTasks.length;i++){
-        createDomStructurForTask(sortedTasks,i);
+        createDomStructurForTask(sortedTasks,i,currentProjectName);
     }
 }
 
@@ -57,12 +58,14 @@ let updateIndexOfProjects=(index)=>{
     }
 }
 
-let removeTask=(e,currentProjectTaskList)=>{
+let removeTask=(e,currentProjectTaskList, currentProjectName)=>{
     let indexOfCurrentTask=e.target.dataset.index;
     currentProjectTaskList.splice(indexOfCurrentTask,1);
     
-    localStorage.setItem('allProjectsTasksArr',JSON.stringify(allProjectsTasks));
-    
+    const taskListJSON = JSON.stringify(currentProjectTaskList);
+    localStorage.setItem(`${currentProjectName}`,taskListJSON);
+    addTaskListToCloud(currentProjectName,taskListJSON);
+
     e.target.closest('table').remove();
     updateIndexOfTasks();
 }

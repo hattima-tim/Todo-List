@@ -94,30 +94,40 @@ async function setCompletionCountInCloud(taskCompletionCount,operation) {
   try {
     switch (operation) {
       case 'add':        
-        await setDoc(userRef, {
-          taskCompletionCount: taskCompletionCount,
-        },{merge:true});
-        break;
-      
+      await setDoc(userRef, {
+        taskCompletionCount: taskCompletionCount,
+      },{merge:true});
+      break;
+
       case 'update':
-        await updateDoc(userRef, {
-          taskCompletionCount: taskCompletionCount,
-        });
-        break;
+      await updateDoc(userRef, {
+        taskCompletionCount: taskCompletionCount,
+      });
+      break;
     }
   } catch (error) {
     console.error("Error with setting completion count", error);
   }
 }
 
-async function saveProjectNameArrayInCloud(arrayJSON) {
+async function saveProjectNameArrayInCloud(arrayJSON,operation) {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
 
   try {
-    await setDoc(userRef, {
-      projectNameArray: arrayJSON,
-    });
+    switch (operation) {
+      case 'add':        
+        await setDoc(userRef, {
+          projectNameArray: arrayJSON,
+        },{merge:true});
+        break;
+
+      case 'update':
+        await updateDoc(userRef, {
+          projectNameArray: arrayJSON,
+        });
+        break;        
+    }
   } catch (error) {
     console.error("Error with saving project name array", error);
   }
@@ -133,7 +143,7 @@ const getTaskCompletionCountFromCloud = async () => {
     return taskCompletionCountInDB;
   }
 
-  setCompletionCountInCloud(0);
+  setCompletionCountInCloud(0,'add');
   return 0;
 };
 

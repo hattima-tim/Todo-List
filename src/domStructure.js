@@ -34,7 +34,7 @@ let showDetailsModal = (e, currentProjectTaskList) => {
   detailsModal.style.display = "block";
 };
 
-let createDomStructurForTask = (currentProjectTaskList, index) => {
+let createDomStructurForTask = (currentProjectTaskList, index, currentProjectName) => {
   let table = document.createElement("table");
   let tableRow = document.createElement("tr");
   let checkbox = document.createElement("td");
@@ -68,7 +68,7 @@ let createDomStructurForTask = (currentProjectTaskList, index) => {
     setCompletionCountInCloud(taskCompletionCount,'update');
 
     taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
-    removeTask(e, currentProjectTaskList);
+    removeTask(e, currentProjectTaskList,currentProjectName);
   });
 
   titleInfo.textContent = currentProjectTaskList[index].taskTitle;
@@ -94,7 +94,7 @@ let createDomStructurForTask = (currentProjectTaskList, index) => {
   taskDeleteIcon.setAttribute("class", "far fa-trash-alt");
   taskDeleteIconContainer.setAttribute("data-index", `${index}`);
   taskDeleteIconContainer.addEventListener("click", (e) => {
-    removeTask(e, currentProjectTaskList);
+    removeTask(e, currentProjectTaskList, currentProjectName);
   });
 
   checkbox.appendChild(checkboxInput);

@@ -175,7 +175,7 @@ const getProjectNameArrayFromCloud = async () => {
     }
 
     createProjectInCloud("Home");
-    saveProjectNameArrayInCloud(JSON.stringify(['Home']));
+    saveProjectNameArrayInCloud(JSON.stringify(['Home']),'add');
     return ["Home"];  
   }catch(error){
     console.log('Error getting project name array from firestore',error);

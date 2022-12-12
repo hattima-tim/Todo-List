@@ -148,16 +148,16 @@ const getProjectNameArrayFromCloud = async () => {
   try{
     const userSnap = await getDoc(userRef);
     const projectNameArrayJSON = userSnap.data().projectNameArray;
-      const projectNameArray = JSON.parse(projectNameArrayJSON);
     
-    if (projectNameArray) {
+    if (projectNameArrayJSON) {
+      const projectNameArray = JSON.parse(projectNameArrayJSON);
       return projectNameArray;
     }
 
     createProjectInCloud("Home");
     saveProjectNameArrayInCloud(JSON.stringify(['Home']));
     return ["Home"];  
-  }catch(e){
+  }catch(error){
     console.log('Error getting project name array from firestore',error);
   }
 };

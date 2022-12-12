@@ -75,7 +75,7 @@ formSubmitButton.addEventListener("click", (e) => {
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
   addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
 
-  showAllTasksOfCurrentProject(currentProjectTaskList);
+  showAllTasksOfCurrentProject(currentProjectTaskList,currentProjectName);
   form.reset();
 });
 
@@ -132,7 +132,7 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
   addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
 
-  showAllTasksOfCurrentProject(currentProjectTaskList);
+  showAllTasksOfCurrentProject(currentProjectTaskList,currentProjectName);
 });
 
 let closeButtonOfFormForEditingTask = document.querySelector(
@@ -180,7 +180,7 @@ let switchProject = (index, projectName) => {
     localStorage.getItem(`${currentProjectName}`)
   );
 
-  showAllTasksOfCurrentProject(currentProjectTaskList);
+  showAllTasksOfCurrentProject(currentProjectTaskList, currentProjectName);
   formSubmitButton.setAttribute("data-index", `${index}`);
   projectHeader.textContent = `${projectName}`;
 };

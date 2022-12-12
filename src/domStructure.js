@@ -65,7 +65,7 @@ let createDomStructurForTask = (currentProjectTaskList, index) => {
       "taskCompletionCount",
       JSON.stringify(taskCompletionCount)
     );
-    setCompletionCountInCloud(taskCompletionCount);
+    setCompletionCountInCloud(taskCompletionCount,'update');
 
     taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
     removeTask(e, currentProjectTaskList);

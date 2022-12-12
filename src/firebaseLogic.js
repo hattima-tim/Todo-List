@@ -122,6 +122,8 @@ const getTaskCompletionCountFromCloud = async () => {
   if (taskCompletionCountInDB) {
     return taskCompletionCountInDB;
   }
+
+  setCompletionCountInCloud(0);
   return 0;
 };
 
@@ -146,12 +148,12 @@ const getProjectNameArrayFromCloud = async () => {
   try{
     const userSnap = await getDoc(userRef);
     const projectNameArrayJSON = userSnap.data().projectNameArray;
-    const projectNameArray = JSON.parse(projectNameArrayJSON);
+      const projectNameArray = JSON.parse(projectNameArrayJSON);
     
     if (projectNameArray) {
       return projectNameArray;
     }
-    
+
     createProjectInCloud("Home");
     saveProjectNameArrayInCloud(JSON.stringify(['Home']));
     return ["Home"];  

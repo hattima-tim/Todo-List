@@ -141,26 +141,22 @@ const getTaskListFromCloud = async (projectName) => {
 
 const getProjectNameArrayFromCloud = async () => {
   const db = getFirestore();
+  const userRef = doc(db, `users/${getUserName()}`);
   
-  try {
-    const querySnapshot = await getDocs(
-      collection(db, `users/${getUserName()}/projects`)
-    );
-
-    if (querySnapshot.empty) {
-      createProjectInCloud("Home");
-    return ["Home"];  
+  try{
+    const userSnap = await getDoc(userRef);
+    const projectNameArrayJSON = userSnap.data().projectNameArray;
+    const projectNameArray = JSON.parse(projectNameArrayJSON);
+    
+    if (projectNameArray) {
+      return projectNameArray;
     }
-
-    let projectArray = [];
-    querySnapshot.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      projectArray.push(doc.id);
-    });
-
-    return projectArray;
-  } catch (error) {
-    console.error("Error getting project lists form firestore", error);
+    
+    createProjectInCloud("Home");
+    saveProjectNameArrayInCloud(JSON.stringify(['Home']));
+    return ["Home"];  
+  }catch(e){
+    console.log('Error getting project name array from firestore',error);
   }
 };
 

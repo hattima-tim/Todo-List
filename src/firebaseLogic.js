@@ -100,6 +100,19 @@ async function setCompletionCountInCloud(taskCompletionCount) {
   }
 }
 
+async function saveProjectNameArrayInCloud(arrayJSON) {
+  const db = getFirestore();
+  const userRef = doc(db, `users/${getUserName()}`);
+
+  try {
+    await setDoc(userRef, {
+      projectNameArray: arrayJSON,
+    });
+  } catch (error) {
+    console.error("Error with saving project name array", error);
+  }
+}
+
 const getTaskCompletionCountFromCloud = async () => {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
@@ -128,7 +141,7 @@ const getTaskListFromCloud = async (projectName) => {
 
 const getProjectNameArrayFromCloud = async () => {
   const db = getFirestore();
-
+  
   try {
     const querySnapshot = await getDocs(
       collection(db, `users/${getUserName()}/projects`)
@@ -136,7 +149,7 @@ const getProjectNameArrayFromCloud = async () => {
 
     if (querySnapshot.empty) {
       createProjectInCloud("Home");
-      return ["Home"];
+    return ["Home"];  
     }
 
     let projectArray = [];
@@ -163,4 +176,5 @@ export {
   getTaskCompletionCountFromCloud,
   getTaskListFromCloud,
   getProjectNameArrayFromCloud,
+  saveProjectNameArrayInCloud
 };

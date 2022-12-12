@@ -11,6 +11,7 @@ import {
   addTaskListToCloud,
   getTaskListFromCloud,
   getProjectNameArrayFromCloud,
+  saveProjectNameArrayInCloud,
 } from "./firebaseLogic";
 
 import {
@@ -152,11 +153,15 @@ createNewProjectButton.addEventListener("click", () => {
   currentProjectName = projectName;
 
   createProjectInCloud(projectName);
+
+  const projectNameArrayJSON = JSON.stringify(projectNameArray);
+  saveProjectNameArrayInCloud(projectNameArrayJSON);
+
   localStorage.setItem(
     `${currentProjectName}`,
     JSON.stringify(currentProjectTaskList)
   );
-  localStorage.setItem("projectNameArray", JSON.stringify(projectNameArray));
+  localStorage.setItem("projectNameArray", projectNameArrayJSON);
 
   let index = projectNameArray.length - 1;
   createDomStructurForProject(

@@ -1,4 +1,4 @@
-import { setCompletionCountInCloud } from "./firebaseLogic";
+import { isUserSignedIn, setCompletionCountInCloud } from "./firebaseLogic";
 import {
   removeTask,
   removeProject,
@@ -34,7 +34,11 @@ let showDetailsModal = (e, currentProjectTaskList) => {
   detailsModal.style.display = "block";
 };
 
-let createDomStructurForTask = (currentProjectTaskList, index, currentProjectName) => {
+let createDomStructurForTask = (
+  currentProjectTaskList,
+  index,
+  currentProjectName
+) => {
   let table = document.createElement("table");
   let tableRow = document.createElement("tr");
   let checkbox = document.createElement("td");
@@ -56,6 +60,11 @@ let createDomStructurForTask = (currentProjectTaskList, index, currentProjectNam
   checkboxInput.setAttribute("value", "done");
   checkboxInput.setAttribute("data-index", `${index}`);
   checkboxInput.addEventListener("change", async (e) => {
+    if (!isUserSignedIn()) {
+      alert("Please sign-in to complete tasks.");
+      return;
+    }
+
     let taskCompletionCount = JSON.parse(
       localStorage.getItem("taskCompletionCount")
     );
@@ -65,10 +74,10 @@ let createDomStructurForTask = (currentProjectTaskList, index, currentProjectNam
       "taskCompletionCount",
       JSON.stringify(taskCompletionCount)
     );
-    setCompletionCountInCloud(taskCompletionCount,'update');
+    setCompletionCountInCloud(taskCompletionCount, "update");
 
     taskCompletionCountDOM.textContent = `Completed (${taskCompletionCount})`;
-    removeTask(e, currentProjectTaskList,currentProjectName);
+    removeTask(e, currentProjectTaskList, currentProjectName);
   });
 
   titleInfo.textContent = currentProjectTaskList[index].taskTitle;
@@ -84,6 +93,11 @@ let createDomStructurForTask = (currentProjectTaskList, index, currentProjectNam
   taskEditIcon.setAttribute("class", "far fa-edit");
   taskEditIconContainer.setAttribute("data-index", `${index}`);
   taskEditIconContainer.addEventListener("click", (e) => {
+    if (!isUserSignedIn()) {
+      alert("Please sign-in to edit tasks.");
+      return;
+    }
+
     showFormForEditingTask(e, currentProjectTaskList);
     submitButtonForEditingTask.setAttribute(
       "data-index",
@@ -94,6 +108,11 @@ let createDomStructurForTask = (currentProjectTaskList, index, currentProjectNam
   taskDeleteIcon.setAttribute("class", "far fa-trash-alt");
   taskDeleteIconContainer.setAttribute("data-index", `${index}`);
   taskDeleteIconContainer.addEventListener("click", (e) => {
+    if (!isUserSignedIn()) {
+      alert("Please sign-in to delete tasks.");
+      return;
+    }
+
     removeTask(e, currentProjectTaskList, currentProjectName);
   });
 
@@ -134,6 +153,11 @@ let createDomStructurForProject = (
   let projectRemover = document.createElement("span");
   projectRemover.textContent = "x";
   projectRemover.addEventListener("click", (e) => {
+    if (!isUserSignedIn()) {
+      alert("Please sign-in to remove projects.");
+      return;
+    }
+
     removeProject(e, projectName, projectNameArray);
     e.target.parentNode.remove();
   });

@@ -13,7 +13,6 @@ import {
   getTaskListFromCloud,
   getProjectNameArrayFromCloud,
   saveProjectNameArrayInCloud,
-  updateProjectNameArrayInCloud,
 } from "./firebaseLogic";
 
 import {
@@ -25,9 +24,9 @@ import {
 import { createDomStructurForProject } from "./domStructure";
 
 new Rive({
-    src: "https://public.rive.app/community/runtime-files/2492-5015-impatient-placeholder.riv",
-    canvas: document.getElementById("canvas"),
-    autoplay: true
+  src: "https://public.rive.app/community/runtime-files/2492-5015-impatient-placeholder.riv",
+  canvas: document.getElementById("canvas"),
+  autoplay: true,
 });
 
 // Initialize Firebase
@@ -50,6 +49,11 @@ let allProjectsTasks = JSON.parse(
 let formContainer = document.querySelector("#form_container");
 let addTaskButton = document.querySelector("#add_task_button");
 addTaskButton.addEventListener("click", () => {
+  if (!isUserSignedIn()) {
+    alert("Please sign-in to create tasks.");
+    return;
+  }
+
   formContainer.style.display = "flex";
   formContainer.style.justifyContent = "center";
   formContainer.style.alignItems = "center";
@@ -82,7 +86,7 @@ formSubmitButton.addEventListener("click", (e) => {
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
   addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
 
-  showAllTasksOfCurrentProject(currentProjectTaskList,currentProjectName);
+  showAllTasksOfCurrentProject(currentProjectTaskList, currentProjectName);
   form.reset();
 });
 
@@ -139,7 +143,7 @@ submitButtonForEditingTask.addEventListener("click", (e) => {
   localStorage.setItem(`${currentProjectName}`, currentProjectTaskListJSON);
   addTaskListToCloud(currentProjectName, currentProjectTaskListJSON);
 
-  showAllTasksOfCurrentProject(currentProjectTaskList,currentProjectName);
+  showAllTasksOfCurrentProject(currentProjectTaskList, currentProjectName);
 });
 
 let closeButtonOfFormForEditingTask = document.querySelector(
@@ -153,6 +157,11 @@ let projectName;
 let projectNameArray = ["Home"]; // default, but the list will be updated on sign-in
 let createNewProjectButton = document.querySelector("#add_project");
 createNewProjectButton.addEventListener("click", () => {
+  if (!isUserSignedIn()) {
+    alert("Please sign-in to create projects.");
+    return;
+  }
+
   projectName = prompt("Enter a Name");
   if (!projectName) return;
 
@@ -163,7 +172,7 @@ createNewProjectButton.addEventListener("click", () => {
   createProjectInCloud(projectName);
 
   const projectNameArrayJSON = JSON.stringify(projectNameArray);
-  saveProjectNameArrayInCloud(projectNameArrayJSON,'update');
+  saveProjectNameArrayInCloud(projectNameArrayJSON, "update");
 
   localStorage.setItem(
     `${currentProjectName}`,
@@ -241,15 +250,15 @@ const authStateObserver = async (user) => {
 // Listen to auth state changes.
 onAuthStateChanged(getAuth(), authStateObserver);
 
-const allTasksContainer = document.querySelector('#task_container');
-const riveCanvasContainer = document.querySelector('.rive_canvas_container');
+const allTasksContainer = document.querySelector("#task_container");
+const riveCanvasContainer = document.querySelector(".rive_canvas_container");
 
 const observer = new MutationObserver((mutations) => {
   // Check if the parent node has any child nodes
   if (allTasksContainer.childNodes.length === 0) {
-    riveCanvasContainer.style.display = 'flex';
+    riveCanvasContainer.style.display = "flex";
   } else {
-    riveCanvasContainer.style.display = 'none';
+    riveCanvasContainer.style.display = "none";
   }
 });
 

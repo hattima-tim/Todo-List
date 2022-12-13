@@ -151,9 +151,10 @@ const getTaskCompletionCountFromCloud = async () => {
   const db = getFirestore();
   const userRef = doc(db, `users/${getUserName()}`);
   const userSnap = await getDoc(userRef);
-  const taskCompletionCountInDB = userSnap.data().taskCompletionCount;
-
-  if (taskCompletionCountInDB) {
+  const doesUserDocumentExist = userSnap.exists();
+  
+  if (doesUserDocumentExist && 'taskCompletionCount' in userSnap.data()) {
+    const taskCompletionCountInDB = userSnap.data().taskCompletionCount;
     return taskCompletionCountInDB;
   }
 
@@ -181,9 +182,10 @@ const getProjectNameArrayFromCloud = async () => {
   
   try{
     const userSnap = await getDoc(userRef);
-    const projectNameArrayJSON = userSnap.data().projectNameArray;
-    
-    if (projectNameArrayJSON) {
+    const doesUserDocumentExist = userSnap.exists();
+  
+    if (doesUserDocumentExist && 'projectNameArray' in userSnap.data()) {
+      const projectNameArrayJSON = userSnap.data().projectNameArray;
       const projectNameArray = JSON.parse(projectNameArrayJSON);
       return projectNameArray;
     }

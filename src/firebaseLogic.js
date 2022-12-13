@@ -14,7 +14,7 @@ import {
   getDoc,
   getDocs,
   updateDoc,
-  collection,
+  deleteDoc,
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -65,6 +65,20 @@ async function createProjectInCloud(projectName) {
 
   try {
     await setDoc(userProjectRef, { [projectName]: "[]" });
+  } catch (error) {
+    console.error("Error creating new project", error);
+  }
+}
+
+async function deleteProjectInCloud(projectName) {
+  const db = getFirestore();
+  const projectRef = doc(
+    db,
+    `users/${getUserName()}/projects/${projectName}`
+  );
+
+  try {
+    await deleteDoc(projectRef);
   } catch (error) {
     console.error("Error creating new project", error);
   }
@@ -189,6 +203,7 @@ export {
   getProfilePicUrl,
   isUserSignedIn,
   createProjectInCloud,
+  deleteProjectInCloud,
   addTaskListToCloud,
   setCompletionCountInCloud,
   getTaskCompletionCountFromCloud,

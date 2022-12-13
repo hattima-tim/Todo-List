@@ -7,12 +7,14 @@ This is a simple Todo-List website.See it live [here](https://hattima-tim.github
 - html
 - css
 
+> There is a animation on the front page. It was taken from [here](https://rive.app/community/2492-5015-impatient-placeholder/).
+
 ## Features:
 
-1. Create Tasks.
-    > Title,description,priority/importance and dueDate can be added to the tasks.
+1. Cloud Support !
 
-2. Store tasks locally in browser.
+2. Create Tasks.
+    > Title,description,priority/importance and dueDate can be added to the tasks.
 
 3. Automatically sort tasks according to their priority/importance.
     > Task with higher priority will reside in a higher position then a task with lower or medium priority.
@@ -26,6 +28,8 @@ This is a simple Todo-List website.See it live [here](https://hattima-tim.github
 7. Delete task.
 
 ## Things learned/practiced:
+
+- Learned to use firebase.
 
 - Learned how to use localStorage for storing data locally.
 

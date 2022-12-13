@@ -1,3 +1,4 @@
+import { Rive } from "@rive-app/canvas";
 import { initializeApp } from "firebase/app";
 import { onAuthStateChanged, getAuth } from "firebase/auth";
 import {
@@ -23,8 +24,14 @@ import {
 
 import { createDomStructurForProject } from "./domStructure";
 
+new Rive({
+    src: "https://public.rive.app/community/runtime-files/2492-5015-impatient-placeholder.riv",
+    canvas: document.getElementById("canvas"),
+    autoplay: true
+});
+
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+initializeApp(firebaseConfig);
 
 let taskCompletionCount = 0;
 let taskCompletionCountDOM = document.querySelector("#total_task_completed");
@@ -233,5 +240,22 @@ const authStateObserver = async (user) => {
 // Initialize firebase auth
 // Listen to auth state changes.
 onAuthStateChanged(getAuth(), authStateObserver);
+
+const allTasksContainer = document.querySelector('#task_container');
+const riveCanvasContainer = document.querySelector('.rive_canvas_container');
+
+const observer = new MutationObserver((mutations) => {
+  // Check if the parent node has any child nodes
+  if (allTasksContainer.childNodes.length === 0) {
+    riveCanvasContainer.style.display = 'flex';
+  } else {
+    riveCanvasContainer.style.display = 'none';
+  }
+});
+
+// Start observing the parent node for changes
+observer.observe(allTasksContainer, {
+  childList: true, // Watch for changes to the child nodes of the parent
+});
 
 export { allProjectsTasks, projectNameArray, switchProject };

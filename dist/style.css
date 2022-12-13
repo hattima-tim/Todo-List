@@ -1,3 +1,7 @@
+body{
+  background-color: #f4f4f4;
+}
+
 h1 {
   margin-left: 15%;
 }
@@ -128,6 +132,12 @@ textarea {
 #task_container {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
+}
+
+.rive_canvas_container {
+  width: 100%;
+  display: flex;
   justify-content: center;
 }
 

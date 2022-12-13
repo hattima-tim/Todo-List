@@ -1,6 +1,6 @@
 import {switchProject} from './index';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
-import { addTaskListToCloud } from './firebaseLogic';
+import { addTaskListToCloud, deleteProjectInCloud, saveProjectNameArrayInCloud } from './firebaseLogic';
 
 let createTask=(taskImportance,taskTitle,taskDescription,taskDueDate)=>{
 
@@ -70,15 +70,18 @@ let removeTask=(e,currentProjectTaskList, currentProjectName)=>{
     updateIndexOfTasks();
 }
 
-let removeProject=(e)=>{
-    let indexOfCurrentProject=e.target.previousElementSibling.dataset.index;
-    allProjectsTasks.splice(indexOfCurrentProject,1);
-    projectNameArray.splice(indexOfCurrentProject,1)
+let removeProject=(e, projectName, projectNameArray)=>{
+    let indexOfTheProject=e.target.previousElementSibling.dataset.index;
+    projectNameArray.splice(indexOfTheProject,1)
     
-    localStorage.setItem('allProjectsTasksArr',JSON.stringify(allProjectsTasks));
-    localStorage.setItem('projectNameArray',JSON.stringify(projectNameArray));
+    const projectNameArrayJSON = JSON.stringify(projectNameArray);
+    localStorage.setItem('projectNameArray',projectNameArrayJSON);
+    saveProjectNameArrayInCloud(projectNameArrayJSON,'update');
+    
+    localStorage.removeItem(`${projectName}`);
+    deleteProjectInCloud(projectName);
 
-    updateIndexOfProjects(indexOfCurrentProject);
+    updateIndexOfProjects(indexOfTheProject);
     switchProject(0,'Home');
 }
 

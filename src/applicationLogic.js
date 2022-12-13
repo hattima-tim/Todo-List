@@ -1,4 +1,4 @@
-import {allProjectsTasks,projectNameArray,switchProject} from './index';
+import {switchProject} from './index';
 import {domContainerForTasks,createDomStructurForTask,createDomStructurForProject} from './domStructure';
 import { addTaskListToCloud } from './firebaseLogic';
 
@@ -27,7 +27,7 @@ let showAllCurrentProjects=(projectNameArray)=>{
         let projectName=projectNameArray[i];
         let index=i;
         let createNewProjectButton=document.querySelector('#add_project');
-        createDomStructurForProject(switchProject,createNewProjectButton,projectName,index);
+        createDomStructurForProject(switchProject,createNewProjectButton,projectName,projectNameArray,index);
     }
 }
 
@@ -77,7 +77,7 @@ let removeProject=(e)=>{
     
     localStorage.setItem('allProjectsTasksArr',JSON.stringify(allProjectsTasks));
     localStorage.setItem('projectNameArray',JSON.stringify(projectNameArray));
-    
+
     updateIndexOfProjects(indexOfCurrentProject);
     switchProject(0,'Home');
 }

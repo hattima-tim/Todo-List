@@ -169,6 +169,7 @@ createNewProjectButton.addEventListener("click", () => {
     switchProject,
     createNewProjectButton,
     currentProjectName,
+    projectNameArray,
     index
   );
 });

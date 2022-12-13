@@ -116,6 +116,7 @@ let createDomStructurForProject = (
   switchProject,
   createNewProjectButton,
   projectName,
+  projectNameArray,
   index
 ) => {
   let side_nav_project_name_container = document.createElement("div");
@@ -133,7 +134,7 @@ let createDomStructurForProject = (
   let projectRemover = document.createElement("span");
   projectRemover.textContent = "x";
   projectRemover.addEventListener("click", (e) => {
-    removeProject(e);
+    removeProject(e, projectName, projectNameArray);
     e.target.parentNode.remove();
   });
   side_nav_project_name_container.appendChild(projectNameLink);
